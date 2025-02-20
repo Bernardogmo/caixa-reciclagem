@@ -1,13 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { materiais } from "./materiais";
 import './App.css'; // Import the CSS file
+import { db } from "./firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 
 const App = () => {
-  const [caixa, setCaixa] = useState(100); // Valor inicial do caixa
+  const [caixa, setCaixa] = useState(() => {
+    const savedCaixa = localStorage.getItem("caixa");
+    return savedCaixa ? parseFloat(savedCaixa) : null;
+  });
   const [materialSelecionado, setMaterialSelecionado] = useState(materiais[0]);
   const [peso, setPeso] = useState("");
-  const [compras, setCompras] = useState([]);
+  const [compras, setCompras] = useState(() => {
+    const savedCompras = localStorage.getItem("compras");
+    return savedCompras ? JSON.parse(savedCompras) : [];
+  });
   const [desconto, setDesconto] = useState("");
+
+  useEffect(() => {
+    if (caixa === null) {
+      const valorInicial = parseFloat(prompt("Digite o valor inicial do caixa:"));
+      if (!isNaN(valorInicial) && valorInicial >= 0) {
+        setCaixa(valorInicial);
+        localStorage.setItem("caixa", valorInicial);
+      } else {
+        alert("Valor inválido. O valor inicial do caixa será 0.");
+        setCaixa(0);
+        localStorage.setItem("caixa", 0);
+      }
+    }
+  }, [caixa]);
+
+  useEffect(() => {
+    if (caixa !== null) {
+      localStorage.setItem("caixa", caixa);
+    }
+  }, [caixa]);
+
+  useEffect(() => {
+    localStorage.setItem("compras", JSON.stringify(compras));
+  }, [compras]);
+
+  const finalizarCaixa = async () => {
+    try {
+      await addDoc(collection(db, "compras"), {
+        data: new Date().toLocaleDateString(),
+        caixa,
+        compras
+      });
+      alert("Caixa finalizado e dados salvos com sucesso!");
+      setCaixa(0);
+      setCompras([]);
+      localStorage.removeItem("caixa");
+      localStorage.removeItem("compras");
+    } catch (e) {
+      console.error("Erro ao salvar os dados: ", e);
+      alert("Erro ao salvar os dados.");
+    }
+  };
 
   const adicionarCompra = () => {
     if (!peso || isNaN(peso) || peso <= 0) {
@@ -40,7 +90,7 @@ const App = () => {
       <h2 className="title">Controle de Compras - {new Date().toLocaleDateString()}</h2>
       
       <div className="balance">
-        <p className="balance-text">Caixa: R$ {caixa.toFixed(2)}</p>
+        <p className="balance-text">Caixa: R$ {caixa !== null ? caixa.toFixed(2) : "0.00"}</p>
       </div>
       
       <div className="input-group">
@@ -100,6 +150,13 @@ const App = () => {
           </li>
         ))}
       </ul>
+
+      <button 
+        className="button"
+        onClick={finalizarCaixa}
+      >
+        Finalizar Caixa
+      </button>
     </div>
   );
 };
