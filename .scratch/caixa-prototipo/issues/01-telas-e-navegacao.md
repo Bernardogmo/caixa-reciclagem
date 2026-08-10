@@ -1,8 +1,12 @@
 # Telas e navegação do protótipo
 
 Type: prototype
-Status: open
+Status: resolved
 Blocked by:
+
+## Veredito
+
+Resolvido em 2026-08-09 via HITL. Tela do funcionário em **abas** (HOJE/COMPRA/VENDA), saldo sempre visível; materiais como tela no app para o dono; caixa inicial por valor único; cédulas/moedas: R$ 100, 50, 20, 10, 5, 2 e R$ 1, 0,50, 0,25, 0,10, 0,05. Esboços aprovados e fonte primária em `findings/telas-navegacao.md`.
 
 ## Question
 

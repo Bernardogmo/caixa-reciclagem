@@ -23,6 +23,7 @@ Glossário do domínio do controle de caixa da reciclagem. Somente linguagem do 
 - **Caixa inicial**: dinheiro em espécie deixado no início do dia.
 - **Saldo esperado**: caixa inicial + entradas − saídas. Deriva das movimentações; é o valor que "deveria" estar na bolsa.
 - **Contagem física**: dinheiro efetivamente contado na bolsa no fechamento, registrado por **quebra de caixa** (quantidade por cédula/moeda). O total é calculado a partir da quebra.
+- **Cédulas e moedas**: as cédulas são de R$ 100, 50, 20, 10, 5 e 2; as moedas de R$ 1, 0,50, 0,25, 0,10 e 0,05. Mesma lista usada na **quebra de caixa**.
 - **Sobra / Falta**: diferença entre a **contagem física** e o **saldo esperado**. Sobra quando contado > esperado; falta quando contado < esperado.
 - **Fechamento do dia**: ato do dono ao fim do dia — registra a **quebra de caixa**, calcula a diferença (**sobra/falta**) e gera o **resumo do dia**.
 

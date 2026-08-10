@@ -1,150 +1,661 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* ===== Estrutura ===== */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f0fdf4;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.container {
-  padding: 24px;
+.app-main {
+  flex: 1;
+  width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
+  padding: 16px;
 }
 
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.balance {
+/* ===== Header ===== */
+.app-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #d1d5db;
+  padding: 8px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 8px;
 }
 
-.balance-text {
+.app-header-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.app-header-data {
   font-size: 1.125rem;
   font-weight: 600;
 }
 
-.input-group {
+.app-header-perfil {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.btn-trocar {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ===== Saldo ===== */
+.saldo {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.saldo-rotulo {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.saldo-valor {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ===== Botões ===== */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  padding: 12px 16px;
+  margin-top: 12px;
+  transition: filter 0.15s;
+}
+
+.btn:active {
+  filter: brightness(0.92);
+}
+
+.btn-primary {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.btn-success {
+  background-color: #15803d;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background-color: #dcfce7;
+  color: #14532d;
+  border: 1px solid #bbf7d0;
+}
+
+.btn-perfil {
+  min-height: 96px;
+  font-size: 1.5rem;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  min-height: 48px;
+  font-size: 1.05rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Campos grandes ===== */
+.campo {
+  margin-bottom: 16px;
+}
+
+.campo label {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-grande,
+.select-grande {
+  width: 100%;
+  min-height: 56px;
+  font-size: 1.25rem;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: #111827;
+}
+
+.select-grande {
+  appearance: none;
+}
+
+/* Total ao vivo (compra/venda) */
+.total-ao-vivo {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap; /* Add this to allow wrapping */
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
-.input-item {
-  flex: 1;
-  margin-right: 8px;
-  min-width: 150px; /* Add this to ensure a minimum width */
-}
-
-.input-item:last-child {
-  margin-right: 0;
-}
-
-.label {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-
-.input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.button {
-  background-color: #3b82f6;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  width: 100%;
-  margin-top: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #2563eb;
-}
-
-.subtitle {
+.total-ao-vivo span {
   font-size: 1.125rem;
-  font-weight: bold;
-  margin-top: 24px;
+  font-weight: 600;
+  color: #6b7280;
 }
 
-.purchase-list {
-  margin-top: 8px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
+.total-ao-vivo strong {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* ===== Abas ===== */
+.abas {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.abas button {
+  flex: 1;
+  min-height: 56px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+}
+
+.abas button.ativa {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+/* ===== Histórico (aba HOJE) ===== */
+.lista-mov {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mov-linha {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px 12px;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.mov-tipo {
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 4px 8px;
   border-radius: 8px;
-  background-color: #f3f4f6;
+  text-align: center;
+  min-width: 92px;
 }
 
-.purchase-item {
+.mov-tipo.compra {
+  background-color: #dcfce7;
+  color: #065f46;
+}
+
+.mov-tipo.venda {
+  background-color: #bbf7d0;
+  color: #14532d;
+}
+
+.mov-tipo.outra-entra {
+  background-color: #bbf7d0;
+  color: #14532d;
+}
+
+.mov-tipo.outra-sai {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.mov-desc {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.mov-corpo {
+  min-width: 0;
+}
+
+.mov-sub {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.mov-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.mov-valor.sai {
+  color: #065f46;
+}
+
+.mov-valor.entra {
+  color: #16a34a;
+}
+
+.mov-excluir {
+  grid-column: 1 / -1;
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 4px 0 0;
+}
+
+.vazio {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.125rem;
+  padding: 32px 16px;
+}
+
+/* ===== Grid do dono ===== */
+.grid-dono {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.grid-dono .btn {
+  margin: 0;
+  min-height: 96px;
+  font-size: 1.375rem;
+  flex-direction: column;
+}
+
+.btn-grande-emoji {
+  font-size: 1.75rem;
+}
+
+/* ===== Título de tela ===== */
+.tela-titulo {
+  font-size: 1.375rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+/* ===== Overlays ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #f9fafb;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.overlay-header {
+  position: sticky;
+  top: 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  min-height: 56px;
+}
+
+.overlay-titulo {
+  flex: 1;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-voltar {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 0 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.overlay-corpo {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ===== Quebra de caixa ===== */
+.grupo-quebra {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.grupo-quebra h3 {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+  color: #6b7280;
+}
+
+.quebra-linha {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.quebra-linha span {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.quebra-linha input {
+  min-height: 48px;
+  font-size: 1.25rem;
+  text-align: center;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+}
+
+.confere {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 16px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.confere-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.125rem;
   padding: 4px 0;
 }
 
-/* Add media queries for responsiveness */
-@media (max-width: 768px) {
-  .input-group {
-    flex-direction: column;
-  }
+.confere-linha strong {
+  font-size: 1.25rem;
+}
 
-  .input-item {
-    margin-right: 0;
-    margin-bottom: 16px;
-  }
+.sobra {
+  color: #16a34a;
+}
 
-  .input-item:last-child {
-    margin-bottom: 0;
-  }
+.falta {
+  color: #dc2626;
+}
+
+.dif-zero {
+  color: #16a34a;
+}
+
+/* ===== Resumo ===== */
+.resumo-texto {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.resumo-destaque {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-top: 12px;
+  font-size: 1.125rem;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== Dias fechados ===== */
+.dia-fechado {
+  background-color: #ffffff;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.dia-fechado-abrir {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  padding: 12px 14px;
+  min-height: 64px;
+  text-align: left;
+}
+
+.dia-fechado-data {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.dia-fechado-dif {
+  font-size: 1.05rem;
+  color: #6b7280;
+}
+
+.dia-fechado-reabrir {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  min-height: 48px;
+  align-self: center;
+  margin-right: 10px;
+  padding: 0 14px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ===== Tabela de materiais ===== */
+.mat-dica {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0 0 12px;
+}
+
+.mat-linha {
+  display: grid;
+  grid-template-columns: 1fr 130px 44px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mat-linha input {
+  min-height: 48px;
+  font-size: 1.125rem;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+}
+
+.mat-excluir {
+  min-height: 48px;
+  font-size: 1.25rem;
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 10px;
+}
+
+/* ===== Histórico de venda: itens ===== */
+.item-venda {
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+}
+
+.item-venda-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.item-venda-titulo button {
+  background: #fee2e2;
+  border: none;
+  color: #b91c1c;
+  border-radius: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ===== Lista pendente de compra (FormCompra) ===== */
+.item-compra {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.item-compra-desc {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.item-compra-sub {
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+.item-compra-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #065f46;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.item-compra-remover {
+  grid-column: 1 / -1;
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 4px 0 0;
+}
+
+/* ===== Cards por pessoa (resumo do dia) ===== */
+.pessoa-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.pessoa-card-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pessoa-card-nome {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.pessoa-card-anonimo {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.pessoa-card-totais {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.pessoa-card-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #374151;
+  padding: 2px 0;
 }
