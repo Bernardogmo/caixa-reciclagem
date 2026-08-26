@@ -1,5 +1,5 @@
-// Histórico do dia (mais novo primeiro), compartilhado entre funcionário e dono.
-// Excluir só aparece quando podeExcluir (dono, ou dia reaberto) — regra do plano.
+// Histórico do dia (mais novo primeiro), compartilhado entre funcionário e gestor.
+// Excluir só aparece quando podeExcluir (gestor) — regra do plano.
 import { centavosParaReal, formatarHora, formatarPeso } from "../dia";
 
 function LinhaMov({ m, podeExcluir, onExcluir }) {
@@ -51,7 +51,8 @@ function LinhaMov({ m, podeExcluir, onExcluir }) {
 
 export default function HistoricoDia({ dia, podeExcluir, onExcluir }) {
   const movs = [...dia.movimentacoes].reverse();
-  if (!movs.length) return <p className="vazio">Nenhuma movimentação registrada ainda hoje.</p>;
+  if (!movs.length)
+    return <p className="vazio">Quando você registrar uma compra, venda ou outra movimentação, ela aparece aqui.</p>;
   return (
     <div className="lista-mov">
       {movs.map((m) => (

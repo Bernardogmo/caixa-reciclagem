@@ -14,7 +14,8 @@ export default function AberturaDia({ onAbrir }) {
   return (
     <main className="app-main">
       <h1 className="tela-titulo">Abrir o dia</h1>
-      <p className="mat-dica">Conte o dinheiro da bolsa e lance quantas de cada.</p>
+      <p className="dica">Conte o dinheiro da bolsa e lance quantas de cada.</p>
+      <p className="dica">Assim o aplicativo sabe quanto dinheiro tem no caixa no começo do dia.</p>
 
       <QuebraDeCaixa qtds={qtds} onMudar={(denom, valor) => setQtds((prev) => ({ ...prev, [denom]: valor }))} />
 

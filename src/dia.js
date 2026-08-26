@@ -36,9 +36,9 @@ export function centavosParaRealComSinal(c) {
   return (c < 0 ? "-" : "") + centavosParaReal(Math.abs(c));
 }
 
-// "funcionario" → "Funcionário(a)", "dono" → "Dono(a)"
+// "funcionario" → "Funcionário(a)", "dono" → "Gestor(a)"
 export function rotuloPerfil(p) {
-  return p === "dono" ? "Dono(a)" : "Funcionário(a)";
+  return p === "dono" ? "Gestor(a)" : "Funcionário(a)";
 }
 
 // "5,0" | "5.0" → 5.0 (float apenas para exibição/leitura; dinheiro nunca deriva dele direto).

@@ -79,7 +79,7 @@ export default function Backup({ onVoltar }) {
       </div>
 
       <div className="overlay-corpo">
-        <p className="mat-dica">Os dados moram só neste tablet. Baixe um backup no fim do dia.</p>
+        <p className="dica">Os dados moram só neste tablet. Baixe um backup no fim do dia.</p>
 
         <div className="confere">
           {linha("Dias guardados", resumo.dias)}
@@ -103,7 +103,7 @@ export default function Backup({ onVoltar }) {
         {erro && <p className="backup-alerta">{erro}</p>}
 
         <h2 className="tela-titulo backup-secao">Restaurar de um arquivo</h2>
-        <p className="mat-dica">Isto APAGA o que está neste tablet e coloca o conteúdo do arquivo no lugar.</p>
+        <p className="dica">Isto APAGA o que está neste tablet e coloca o conteúdo do arquivo no lugar.</p>
         <input
           ref={inputArquivo}
           className="backup-arquivo"

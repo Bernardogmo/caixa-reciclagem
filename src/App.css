@@ -119,6 +119,15 @@
 .btn-perfil {
   min-height: 96px;
   font-size: 1.5rem;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Legenda sob o rótulo dos botões de perfil (função de cada papel). */
+.btn-perfil-sub {
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.85;
 }
 
 .btn-ghost {
@@ -306,14 +315,14 @@
   padding: 32px 16px;
 }
 
-/* ===== Grid do dono ===== */
-.grid-dono {
+/* ===== Grid de ações (gestor e funcionário) ===== */
+.grid-acoes {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-.grid-dono .btn {
+.grid-acoes .btn {
   margin: 0;
   min-height: 96px;
   font-size: 1.375rem;
@@ -519,13 +528,92 @@
   font-weight: 600;
 }
 
-/* ===== Tabela de materiais ===== */
-.mat-dica {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--texto-fraco);
+/* ===== Texto de ajuda (dica) =====
+   Linha curta em linguagem simples que explica o que a tela faz.
+   Usada em todos os formulários e overlays pra quem usa o app no galpão. */
+.dica {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--texto-suave);
   margin: 0 0 12px;
 }
+
+/* Dica dentro do cartão de saldo (app-main): fica por baixo do valor. */
+.saldo-dica {
+  font-size: 0.95rem;
+  color: var(--texto-fraco);
+  margin: 8px 0 0;
+}
+
+/* ===== Valor a pagar (compra, ao vivo) =====
+   Destaque verde que mostra peso × preço/kg assim que o peso é digitado. */
+.valor-calculado {
+  background-color: var(--superficie);
+  border: 2px solid var(--verde);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.valor-calculado-rotulo {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--texto-fraco);
+}
+
+.valor-calculado strong {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--verde-vivo);
+}
+
+.valor-calculado-sub {
+  font-size: 0.95rem;
+  color: var(--texto-suave);
+}
+
+/* ===== Resumo do modal de confirmação (compra/venda) ===== */
+.modal-resumo-pessoa {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.modal-resumo {
+  background-color: var(--superficie);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.modal-resumo-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.modal-resumo-desc {
+  flex: 1;
+  font-size: 1.05rem;
+  color: var(--texto);
+  line-height: 1.35;
+}
+
+.modal-resumo-valor {
+  flex-shrink: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--verde-vivo-2);
+  white-space: nowrap;
+}
+
+/* ===== Tabela de materiais ===== */
 
 .mat-linha {
   display: grid;

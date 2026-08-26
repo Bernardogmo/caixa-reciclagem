@@ -20,6 +20,8 @@ export default function FormOutras({ onOutra }) {
 
   return (
     <div>
+      <p className="dica">Use para dinheiro que sai ou entra por outro motivo (frete, pagamento, insumos). Escolha &apos;Saída&apos; ou &apos;Entrada&apos; e escreva o motivo.</p>
+
       <div className="abas">
         <button className={direcao === "saida" ? "ativa" : ""} onClick={() => setDirecao("saida")}>
           ⬆ SAÍDA

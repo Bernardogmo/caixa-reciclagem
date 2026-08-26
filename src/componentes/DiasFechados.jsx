@@ -19,6 +19,7 @@ export default function DiasFechados({ dias, onAbrir, onReabrir, onVoltar }) {
         <p className="overlay-titulo">Dias fechados</p>
       </div>
       <div className="overlay-corpo">
+        <p className="dica">Toque em um dia para ver o resumo. &apos;Reabrir&apos; deixa corrigir algo naquele dia.</p>
         {dias.length === 0 && <p className="vazio">Nenhum dia fechado ainda.</p>}
         {dias.map((d) => (
           <div className="dia-fechado" key={d.data}>

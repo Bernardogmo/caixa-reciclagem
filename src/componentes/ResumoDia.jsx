@@ -77,6 +77,7 @@ export default function ResumoDia({ dia, onVoltar }) {
         ))}
 
         <pre className="resumo-texto">{texto}</pre>
+        <p className="dica">Toque em &apos;Copiar texto&apos; para enviar o resumo do dia pelo WhatsApp.</p>
         <button className="btn btn-primary" onClick={copiar}>
           {copiado ? "✔ Copiado!" : "📋 Copiar texto"}
         </button>

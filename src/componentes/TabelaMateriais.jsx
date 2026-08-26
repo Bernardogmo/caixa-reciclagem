@@ -36,7 +36,7 @@ export default function TabelaMateriais({ tabela, onSalvar, onVoltar }) {
         <p className="overlay-titulo">Tabela de materiais</p>
       </div>
       <div className="overlay-corpo">
-        <p className="mat-dica">Preço de COMPRA por kg</p>
+        <p className="dica">Defina o preço (R$) que o galpão paga por 1 kg de cada material.</p>
         {linhas.map((l, idx) => (
           <div className="mat-linha" key={idx}>
             <input value={l.nome} onChange={(e) => setLinha(idx, "nome", e.target.value)} placeholder="Material" />

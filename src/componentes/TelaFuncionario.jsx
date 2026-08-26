@@ -1,6 +1,6 @@
-// Tela do funcionário: abas HOJE (histórico do dia) / COMPRA / VENDA / OUTRAS.
-// Saldo fica sempre no header, acima das abas. Sem MATERIAIS nem FECHAR O DIA —
-// tabela de preços e fechamento continuam só com o dono.
+// Tela do funcionário: botões grandes (COMPRAS/VENDAS/OUTRAS) como na tela do
+// gestor, e o histórico do dia logo abaixo. Sem MATERIAIS/FECHAR O DIA —
+// tabela de preços e fechamento continuam só com o gestor.
 import { useState } from "react";
 import HistoricoDia from "./HistoricoDia";
 import FormCompra from "./FormCompra";
@@ -8,30 +8,79 @@ import FormVenda from "./FormVenda";
 import FormOutras from "./FormOutras";
 
 export default function TelaFuncionario({ dia, materiais, podeExcluir, onCompra, onVenda, onOutra, onExcluir }) {
-  const [aba, setAba] = useState("hoje");
+  const [view, setView] = useState("grid"); // 'grid' | 'compra' | 'venda' | 'outras'
   const lista = materiais.materiais;
+
+  // Depois de confirmar uma movimentação, volta pra tela inicial (grid de botões).
+  function registrarCompra(dados) {
+    onCompra(dados);
+    setView("grid");
+  }
+  function registrarVenda(dados) {
+    onVenda(dados);
+    setView("grid");
+  }
+  function registrarOutra(dados) {
+    onOutra(dados);
+    setView("grid");
+  }
+
+  if (view === "compra") {
+    return (
+      <>
+        <nav className="abas">
+          <button onClick={() => setView("grid")}>← VOLTAR</button>
+          <button className="ativa">COMPRA</button>
+        </nav>
+        <FormCompra materiais={lista} onCompra={registrarCompra} />
+      </>
+    );
+  }
+
+  if (view === "venda") {
+    return (
+      <>
+        <nav className="abas">
+          <button onClick={() => setView("grid")}>← VOLTAR</button>
+          <button className="ativa">VENDA</button>
+        </nav>
+        <FormVenda materiais={lista} onVenda={registrarVenda} />
+      </>
+    );
+  }
+
+  if (view === "outras") {
+    return (
+      <>
+        <nav className="abas">
+          <button onClick={() => setView("grid")}>← VOLTAR</button>
+          <button className="ativa">OUTRAS</button>
+        </nav>
+        <FormOutras onOutra={registrarOutra} />
+      </>
+    );
+  }
 
   return (
     <>
-      <nav className="abas">
-        <button className={aba === "hoje" ? "ativa" : ""} onClick={() => setAba("hoje")}>
-          HOJE
+      <p className="dica">Escolha o que fazer:</p>
+      <div className="grid-acoes">
+        <button className="btn btn-primary" onClick={() => setView("compra")}>
+          <span className="btn-grande-emoji">🛒</span>
+          COMPRAS
         </button>
-        <button className={aba === "compra" ? "ativa" : ""} onClick={() => setAba("compra")}>
-          COMPRA
+        <button className="btn btn-primary" onClick={() => setView("venda")}>
+          <span className="btn-grande-emoji">💰</span>
+          VENDAS
         </button>
-        <button className={aba === "venda" ? "ativa" : ""} onClick={() => setAba("venda")}>
-          VENDA
-        </button>
-        <button className={aba === "outras" ? "ativa" : ""} onClick={() => setAba("outras")}>
+        <button className="btn btn-secondary" onClick={() => setView("outras")}>
+          <span className="btn-grande-emoji">📋</span>
           OUTRAS
         </button>
-      </nav>
+      </div>
 
-      {aba === "hoje" && <HistoricoDia dia={dia} podeExcluir={podeExcluir} onExcluir={onExcluir} />}
-      {aba === "compra" && <FormCompra materiais={lista} onCompra={onCompra} />}
-      {aba === "venda" && <FormVenda materiais={lista} onVenda={onVenda} />}
-      {aba === "outras" && <FormOutras onOutra={onOutra} />}
+      <h2 className="tela-titulo">Histórico de hoje</h2>
+      <HistoricoDia dia={dia} podeExcluir={podeExcluir} onExcluir={onExcluir} />
     </>
   );
 }

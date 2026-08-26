@@ -1,7 +1,9 @@
 // Formulário de venda: 1+ itens (material/descrição + quantidade + valor)
 // + ajuste no total. Total ao vivo via calcularVenda. Per esboço aprovado.
+// Ao finalizar abre um modal de confirmação com o resumo da venda.
 import { useState } from "react";
 import { calcularVenda, centavosParaReal, realParaCentavos } from "../dia";
+import ModalConfirmar from "./ModalConfirmar";
 
 function itemVazio() {
   return { material: "", quantidade: "", valor: "" };
@@ -11,6 +13,8 @@ export default function FormVenda({ materiais, onVenda }) {
   const [itens, setItens] = useState([itemVazio()]);
   const [pessoa, setPessoa] = useState("");
   const [ajuste, setAjuste] = useState("");
+  const [confirmando, setConfirmando] = useState(false);
+  const [dadosConfirmar, setDadosConfirmar] = useState(null);
 
   // Cada item: valor é o TOTAL do item (R$), quantidade é texto livre ("80 kg").
   const itensCent = itens.map((i) => {
@@ -29,22 +33,36 @@ export default function FormVenda({ materiais, onVenda }) {
     setItens((prev) => prev.map((i, k) => (k === idx ? { ...i, [campo]: valor } : i)));
   }
 
-  function confirmar() {
+  function pedirConfirmacao() {
     if (!valido) return;
-    onVenda({
+    setDadosConfirmar({
       pessoa,
       itens: itensCent
         .filter((i) => i.material.trim() !== "" && i.valorCentavos > 0)
         .map((i) => ({ material: i.material.trim(), quantidade: i.quantidade.trim(), valorCentavos: i.valorCentavos })),
       ajusteTotalCentavos: ajusteCentavos,
+      totalCentavos,
+    });
+    setConfirmando(true);
+  }
+
+  function finalizar() {
+    setConfirmando(false);
+    onVenda({
+      pessoa: dadosConfirmar.pessoa,
+      itens: dadosConfirmar.itens,
+      ajusteTotalCentavos: dadosConfirmar.ajusteTotalCentavos,
     });
     setItens([itemVazio()]);
     setPessoa("");
     setAjuste("");
+    setDadosConfirmar(null);
   }
 
   return (
     <div>
+      <p className="dica">Registre a venda: o material, a quantidade (opcional) e o valor recebido. Para mais de um item, toque em &apos;Adicionar item&apos;.</p>
+
       <div className="campo">
         <label htmlFor="ven-nome">Nome do comprador (opcional)</label>
         <input
@@ -133,9 +151,48 @@ export default function FormVenda({ materiais, onVenda }) {
         <strong>{centavosParaReal(totalCentavos)}</strong>
       </div>
 
-      <button className="btn btn-primary" disabled={!valido} onClick={confirmar}>
+      <button className="btn btn-primary" disabled={!valido} onClick={pedirConfirmacao}>
         ✔ CONFIRMAR VENDA
       </button>
+
+      {confirmando && dadosConfirmar && (
+        <ModalConfirmar
+          titulo="Confirmar venda"
+          rotuloBotao="✔ CONFIRMAR VENDA"
+          onConfirmar={finalizar}
+          onCancelar={() => {
+            setConfirmando(false);
+            setDadosConfirmar(null);
+          }}
+        >
+          {dadosConfirmar.pessoa.trim() !== "" && (
+            <div className="modal-resumo-pessoa">
+              Venda para <strong>{dadosConfirmar.pessoa}</strong>
+            </div>
+          )}
+          <div className="modal-resumo">
+            {dadosConfirmar.itens.map((i, idx) => (
+              <div className="modal-resumo-linha" key={idx}>
+                <div className="modal-resumo-desc">
+                  {i.material}
+                  {i.quantidade ? ` — ${i.quantidade}` : ""}
+                </div>
+                <div className="modal-resumo-valor">{centavosParaReal(i.valorCentavos)}</div>
+              </div>
+            ))}
+            {dadosConfirmar.ajusteTotalCentavos !== 0 && (
+              <div className="modal-resumo-linha">
+                <div className="modal-resumo-desc">Ajuste no total</div>
+                <div className="modal-resumo-valor">{centavosParaReal(dadosConfirmar.ajusteTotalCentavos)}</div>
+              </div>
+            )}
+          </div>
+          <div className="total-ao-vivo">
+            <span>TOTAL</span>
+            <strong>{centavosParaReal(dadosConfirmar.totalCentavos)}</strong>
+          </div>
+        </ModalConfirmar>
+      )}
     </div>
   );
 }

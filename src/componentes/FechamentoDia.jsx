@@ -27,6 +27,8 @@ export default function FechamentoDia({ dia, onFechar, onVoltar }) {
         <p className="overlay-titulo">Fechamento do dia</p>
       </div>
       <div className="overlay-corpo">
+        <p className="dica">Conte o dinheiro que está na bolsa agora e lance a quantidade de cada cédula e moeda. O aplicativo compara com o que deveria ter.</p>
+
         <div className="saldo">
           <p className="saldo-rotulo">Saldo esperado</p>
           <p className="saldo-valor">{centavosParaReal(esperado)}</p>
@@ -48,6 +50,8 @@ export default function FechamentoDia({ dia, onFechar, onVoltar }) {
             <strong>{difRotulo}</strong>
           </div>
         </div>
+
+        <p className="dica">Sobra: tem mais do que deveria. Falta: tem menos.</p>
 
         <button className="btn btn-success" onClick={() => onFechar(quebra)}>
           ✔ FECHAR O DIA

@@ -24,6 +24,20 @@ export default function TelaDono({
   const [view, setView] = useState("grid"); // 'grid' | 'compra' | 'venda' | 'outras'
   const lista = materiais.materiais;
 
+  // Depois de confirmar uma movimentação, volta pra tela inicial (grid de botões).
+  function registrarCompra(dados) {
+    onCompra(dados);
+    setView("grid");
+  }
+  function registrarVenda(dados) {
+    onVenda(dados);
+    setView("grid");
+  }
+  function registrarOutra(dados) {
+    onOutra(dados);
+    setView("grid");
+  }
+
   if (view === "compra") {
     return (
       <>
@@ -31,7 +45,7 @@ export default function TelaDono({
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">COMPRA</button>
         </nav>
-        <FormCompra materiais={lista} onCompra={onCompra} />
+        <FormCompra materiais={lista} onCompra={registrarCompra} />
       </>
     );
   }
@@ -43,7 +57,7 @@ export default function TelaDono({
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">VENDA</button>
         </nav>
-        <FormVenda materiais={lista} onVenda={onVenda} />
+        <FormVenda materiais={lista} onVenda={registrarVenda} />
       </>
     );
   }
@@ -55,14 +69,15 @@ export default function TelaDono({
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">OUTRAS</button>
         </nav>
-        <FormOutras onOutra={onOutra} />
+        <FormOutras onOutra={registrarOutra} />
       </>
     );
   }
 
   return (
     <>
-      <div className="grid-dono">
+      <p className="dica">Escolha o que fazer:</p>
+      <div className="grid-acoes">
         <button className="btn btn-primary" onClick={() => setView("compra")}>
           <span className="btn-grande-emoji">🛒</span>
           COMPRAS

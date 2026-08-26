@@ -139,8 +139,8 @@ export default function App() {
     return <AberturaDia onAbrir={abrirDia} />;
   }
 
-  // Exclusão só no histórico: dono sempre, ou dia reaberto (para desfazer um erro).
-  const podeExcluir = perfil === "dono" || dia.status === "reaberto";
+  // Exclusão no histórico só para o gestor — o funcionário não apaga dados.
+  const podeExcluir = perfil === "dono";
 
   const tela =
     perfil === "dono" ? (
@@ -189,6 +189,7 @@ export default function App() {
         <div className="saldo">
           <div className="saldo-rotulo">SALDO ESPERADO</div>
           <div className="saldo-valor">{centavosParaReal(dia.saldoEsperadoCentavos)}</div>
+          <p className="saldo-dica">O dinheiro que deveria estar na bolsa neste momento.</p>
         </div>
         {tela}
       </main>
