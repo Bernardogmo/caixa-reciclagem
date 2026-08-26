@@ -1,38 +1,32 @@
-// Abertura do dia: valor único do caixa inicial + ABRIR O DIA.
-// inputMode="decimal" — teclado numérico no tablet. realParaCentavos aceita "100", "100,00", "100.00".
+// Abertura do dia: a mesma quebra de caixa do fechamento. Conta cédula e moeda,
+// o total vira o caixa inicial. Guardar a quebra deixa registrado o que ficou na
+// bolsa — dá pra conferir depois de que notas era o dinheiro do início.
 import { useState } from "react";
-import { centavosParaReal, realParaCentavos } from "../dia";
+import { calcularQuebraTotal, centavosParaReal, quantidadesVazias, quebraDeQuantidades } from "../dia";
+import QuebraDeCaixa from "./QuebraDeCaixa";
 
 export default function AberturaDia({ onAbrir }) {
-  const [valor, setValor] = useState("");
-  const centavos = realParaCentavos(valor);
-  const valido = Number.isFinite(centavos) && centavos >= 0;
+  const [qtds, setQtds] = useState(quantidadesVazias);
 
-  function confirmar() {
-    if (!valido) return;
-    onAbrir(centavos);
-  }
+  const quebra = quebraDeQuantidades(qtds);
+  const total = calcularQuebraTotal(quebra);
 
   return (
     <main className="app-main">
       <h1 className="tela-titulo">Abrir o dia</h1>
+      <p className="mat-dica">Conte o dinheiro da bolsa e lance quantas de cada.</p>
 
-      <div className="campo">
-        <label htmlFor="caixa-inicial">Caixa inicial (R$)</label>
-        <input
-          id="caixa-inicial"
-          className="input-grande"
-          inputMode="decimal"
-          autoFocus
-          placeholder="Ex.: 100,00"
-          value={valor}
-          onChange={(e) => setValor(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && confirmar()}
-        />
+      <QuebraDeCaixa qtds={qtds} onMudar={(denom, valor) => setQtds((prev) => ({ ...prev, [denom]: valor }))} />
+
+      <div className="confere">
+        <div className="confere-linha">
+          <span>CAIXA INICIAL</span>
+          <strong>{centavosParaReal(total)}</strong>
+        </div>
       </div>
 
-      <button className="btn btn-success" disabled={!valido} onClick={confirmar}>
-        ABRIR O DIA {valido ? `— ${centavosParaReal(centavos)}` : ""}
+      <button className="btn btn-success" onClick={() => onAbrir(total, quebra)}>
+        ✔ ABRIR O DIA — {centavosParaReal(total)}
       </button>
     </main>
   );

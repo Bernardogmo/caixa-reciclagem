@@ -99,13 +99,15 @@ export function gerarId(tipo, dataISO) {
   return `${tipo}-${compacto}-${hh}${mm}-${contadorId}`;
 }
 
-export function novoDia(data, caixaInicialCentavos, perfil) {
+export function novoDia(data, caixaInicialCentavos, perfil, quebraInicial) {
   return {
     version: 1,
     data,
     status: "aberto",
     perfilAbertura: perfil,
     caixaInicialCentavos,
+    // Como o caixa inicial foi contado (cédula/moeda). Dias antigos não têm: fica null.
+    quebraInicial: quebraInicial || null,
     movimentacoes: [],
     quebraDeCaixa: null,
     abertoEm: new Date().toISOString(),
@@ -401,4 +403,29 @@ export function gerarTextoResumo(dia) {
   linhas.push(`*DIFERENÇA:* ${linhaDiferenca(r.diferencaCentavos)}`);
 
   return linhas.join("\n");
+}
+
+// ---- Quantidades digitadas na quebra de caixa ----
+// A tela guarda string por denominação (input vazio ≠ zero); estas duas funções
+// fazem a ponte pro formato de quebra usado pelo cálculo. Abertura e fechamento
+// do dia usam as mesmas.
+
+export function quantidadesVazias() {
+  const m = {};
+  CEDULAS.forEach((c) => (m[c] = ""));
+  MOEDAS.forEach((c) => (m[c] = ""));
+  return m;
+}
+
+// {10000:"2", 100:""} → {cedulas:{10000:2,...}, moedas:{100:0,...}}
+export function quebraDeQuantidades(qtds) {
+  const num = (chave) => {
+    const n = Number(qtds[chave]);
+    // Nota e moeda se contam inteiras: 2,5 cédulas não existe.
+    return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+  };
+  return {
+    cedulas: Object.fromEntries(CEDULAS.map((c) => [c, num(c)])),
+    moedas: Object.fromEntries(MOEDAS.map((m) => [m, num(m)])),
+  };
 }

@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f0fdf4;
+  background-color: var(--fundo);
 }
 
 .app-main {
@@ -16,8 +16,8 @@
 
 /* ===== Header ===== */
 .app-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid #d1d5db;
+  background-color: var(--superficie);
+  border-bottom: 1px solid var(--borda);
   padding: 8px 16px;
   display: flex;
   justify-content: space-between;
@@ -38,12 +38,13 @@
 
 .app-header-perfil {
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .btn-trocar {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--superficie-2);
+  color: var(--texto);
+  border: 1px solid var(--borda);
   border-radius: 12px;
   min-height: 44px;
   padding: 0 16px;
@@ -53,24 +54,24 @@
 
 /* ===== Saldo ===== */
 .saldo {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 16px;
   padding: 16px;
   text-align: center;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--sombra-forte);
 }
 
 .saldo-rotulo {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .saldo-valor {
   font-size: 2.25rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--texto);
 }
 
 /* ===== Botões ===== */
@@ -95,24 +96,24 @@
 }
 
 .btn-primary {
-  background-color: #16a34a;
-  color: #ffffff;
+  background-color: var(--verde);
+  color: var(--texto-em-cor);
 }
 
 .btn-success {
-  background-color: #15803d;
-  color: #ffffff;
+  background-color: var(--verde-escuro);
+  color: var(--texto-em-cor);
 }
 
 .btn-danger {
-  background-color: #dc2626;
-  color: #ffffff;
+  background-color: var(--vermelho);
+  color: var(--texto-em-cor);
 }
 
 .btn-secondary {
-  background-color: #dcfce7;
-  color: #14532d;
-  border: 1px solid #bbf7d0;
+  background-color: var(--verde-fraco);
+  color: var(--verde-texto);
+  border: 1px solid var(--verde-fraco-2);
 }
 
 .btn-perfil {
@@ -122,8 +123,8 @@
 
 .btn-ghost {
   background: transparent;
-  border: 1px solid #d1d5db;
-  color: #374151;
+  border: 1px solid var(--borda);
+  color: var(--texto-suave);
   min-height: 48px;
   font-size: 1.05rem;
 }
@@ -151,10 +152,10 @@
   min-height: 56px;
   font-size: 1.25rem;
   padding: 12px 14px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--borda);
   border-radius: 12px;
-  background-color: #ffffff;
-  color: #111827;
+  background-color: var(--superficie);
+  color: var(--texto);
 }
 
 .select-grande {
@@ -166,33 +167,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px 16px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .total-ao-vivo span {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .total-ao-vivo strong {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--texto);
 }
 
 /* ===== Abas ===== */
 .abas {
   display: flex;
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 16px;
   overflow: hidden;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px var(--sombra-forte);
 }
 
 .abas button {
@@ -202,12 +203,12 @@
   font-weight: 700;
   border: none;
   background: transparent;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .abas button.ativa {
-  background-color: #16a34a;
-  color: #ffffff;
+  background-color: var(--verde);
+  color: var(--texto-em-cor);
 }
 
 /* ===== Histórico (aba HOJE) ===== */
@@ -218,14 +219,14 @@
 }
 
 .mov-linha {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px 14px;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 8px 12px;
   align-items: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .mov-tipo {
@@ -238,23 +239,23 @@
 }
 
 .mov-tipo.compra {
-  background-color: #dcfce7;
-  color: #065f46;
+  background-color: var(--verde-fraco);
+  color: var(--verde-vivo-2);
 }
 
 .mov-tipo.venda {
-  background-color: #bbf7d0;
-  color: #14532d;
+  background-color: var(--verde-fraco-2);
+  color: var(--verde-texto);
 }
 
 .mov-tipo.outra-entra {
-  background-color: #bbf7d0;
-  color: #14532d;
+  background-color: var(--verde-fraco-2);
+  color: var(--verde-texto);
 }
 
 .mov-tipo.outra-sai {
-  background-color: #16a34a;
-  color: #ffffff;
+  background-color: var(--verde);
+  color: var(--texto-em-cor);
 }
 
 .mov-desc {
@@ -269,7 +270,7 @@
 
 .mov-sub {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .mov-valor {
@@ -280,18 +281,18 @@
 }
 
 .mov-valor.sai {
-  color: #065f46;
+  color: var(--verde-vivo-2);
 }
 
 .mov-valor.entra {
-  color: #16a34a;
+  color: var(--verde-vivo);
 }
 
 .mov-excluir {
   grid-column: 1 / -1;
   background: none;
   border: none;
-  color: #dc2626;
+  color: var(--vermelho);
   font-size: 1rem;
   font-weight: 600;
   text-align: left;
@@ -300,7 +301,7 @@
 
 .vazio {
   text-align: center;
-  color: #6b7280;
+  color: var(--texto-fraco);
   font-size: 1.125rem;
   padding: 32px 16px;
 }
@@ -335,7 +336,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: #f9fafb;
+  background-color: var(--fundo);
   overflow-y: auto;
   z-index: 20;
 }
@@ -343,8 +344,8 @@
 .overlay-header {
   position: sticky;
   top: 0;
-  background-color: #ffffff;
-  border-bottom: 1px solid #d1d5db;
+  background-color: var(--superficie);
+  border-bottom: 1px solid var(--borda);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -361,8 +362,9 @@
 }
 
 .btn-voltar {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--superficie-2);
+  color: var(--texto);
+  border: 1px solid var(--borda);
   border-radius: 12px;
   min-height: 44px;
   padding: 0 14px;
@@ -378,17 +380,17 @@
 
 /* ===== Quebra de caixa ===== */
 .grupo-quebra {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .grupo-quebra h3 {
   margin: 0 0 8px;
   font-size: 1.125rem;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .quebra-linha {
@@ -405,19 +407,21 @@
 }
 
 .quebra-linha input {
+  background-color: var(--superficie);
+  color: var(--texto);
   min-height: 48px;
   font-size: 1.25rem;
   text-align: center;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--borda);
   border-radius: 10px;
 }
 
 .confere {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px 14px;
   margin: 16px 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .confere-linha {
@@ -432,51 +436,52 @@
 }
 
 .sobra {
-  color: #16a34a;
+  color: var(--verde-vivo);
 }
 
 .falta {
-  color: #dc2626;
+  color: var(--vermelho);
 }
 
 .dif-zero {
-  color: #16a34a;
+  color: var(--verde-vivo);
 }
 
 /* ===== Resumo ===== */
 .resumo-texto {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 16px;
   font-size: 1.05rem;
   line-height: 1.6;
   white-space: pre-wrap;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .resumo-destaque {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px 14px;
   margin-top: 12px;
   font-size: 1.125rem;
   display: flex;
   justify-content: space-between;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 /* ===== Dias fechados ===== */
 .dia-fechado {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   margin-bottom: 10px;
   display: flex;
   gap: 8px;
   align-items: stretch;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .dia-fechado-abrir {
+  color: var(--texto);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -493,17 +498,18 @@
 .dia-fechado-data {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--texto);
 }
 
 .dia-fechado-dif {
   font-size: 1.05rem;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .dia-fechado-reabrir {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: var(--superficie-2);
+  color: var(--texto);
+  border: 1px solid var(--borda);
   border-radius: 10px;
   min-height: 48px;
   align-self: center;
@@ -517,7 +523,7 @@
 .mat-dica {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--texto-fraco);
   margin: 0 0 12px;
 }
 
@@ -530,10 +536,12 @@
 }
 
 .mat-linha input {
+  background-color: var(--superficie);
+  color: var(--texto);
   min-height: 48px;
   font-size: 1.125rem;
   padding: 8px 10px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--borda);
   border-radius: 10px;
 }
 
@@ -541,18 +549,18 @@
   min-height: 48px;
   font-size: 1.25rem;
   border: none;
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--vermelho-fraco);
+  color: var(--vermelho-texto);
   border-radius: 10px;
 }
 
 /* ===== Histórico de venda: itens ===== */
 .item-venda {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--borda);
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 10px;
-  background-color: #ffffff;
+  background-color: var(--superficie);
 }
 
 .item-venda-titulo {
@@ -564,9 +572,9 @@
 }
 
 .item-venda-titulo button {
-  background: #fee2e2;
+  background: var(--vermelho-fraco);
   border: none;
-  color: #b91c1c;
+  color: var(--vermelho-texto);
   border-radius: 8px;
   min-height: 40px;
   padding: 0 12px;
@@ -580,28 +588,28 @@
   grid-template-columns: 1fr auto;
   gap: 4px 12px;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 12px 14px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .item-compra-desc {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #111827;
+  color: var(--texto);
 }
 
 .item-compra-sub {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .item-compra-valor {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #065f46;
+  color: var(--verde-vivo-2);
   text-align: right;
   white-space: nowrap;
 }
@@ -610,7 +618,7 @@
   grid-column: 1 / -1;
   background: none;
   border: none;
-  color: #dc2626;
+  color: var(--vermelho);
   font-size: 1rem;
   font-weight: 600;
   text-align: left;
@@ -619,11 +627,11 @@
 
 /* ===== Cards por pessoa (resumo do dia) ===== */
 .pessoa-card {
-  background-color: #ffffff;
+  background-color: var(--superficie);
   border-radius: 12px;
   padding: 14px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px var(--sombra);
 }
 
 .pessoa-card-titulo {
@@ -637,25 +645,82 @@
 .pessoa-card-nome {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #111827;
+  color: var(--texto);
 }
 
 .pessoa-card-anonimo {
   font-size: 1.375rem;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--texto-fraco);
 }
 
 .pessoa-card-totais {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #16a34a;
+  color: var(--verde-vivo);
 }
 
 .pessoa-card-linha {
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
-  color: #374151;
+  color: var(--texto-suave);
   padding: 2px 0;
+}
+
+/* ===== Backup ===== */
+.backup-secao {
+  margin-top: 32px;
+}
+
+.backup-arquivo {
+  display: none;
+}
+
+.backup-json {
+  width: 100%;
+  height: 180px;
+  margin-top: 12px;
+  padding: 10px;
+  font-family: ui-monospace, "Consolas", monospace;
+  font-size: 1rem;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background-color: var(--superficie);
+  color: var(--texto-suave);
+  resize: vertical;
+}
+
+.backup-ok {
+  background-color: var(--verde-fraco);
+  color: var(--verde-texto);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.backup-alerta {
+  background-color: var(--vermelho-fraco);
+  color: var(--vermelho-texto);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 12px 0 0;
+}
+
+.backup-confirma {
+  background-color: var(--superficie);
+  border: 2px solid var(--vermelho);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 16px;
+}
+
+.backup-confirma-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 8px;
 }

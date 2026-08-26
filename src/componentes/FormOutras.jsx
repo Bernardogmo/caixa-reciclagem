@@ -1,4 +1,4 @@
-// Outras movimentações (só dono): tipo SAÍDA/ENTRADA + descrição livre + valor.
+// Outras movimentações (dono e funcionário): SAÍDA/ENTRADA + descrição livre + valor.
 // Per esboço aprovado: botões Sai / Entra, descrição e valor.
 import { useState } from "react";
 import { centavosParaReal, realParaCentavos } from "../dia";

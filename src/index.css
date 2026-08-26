@@ -1,11 +1,47 @@
+/* ===== Paleta (tema escuro) =====
+   Tudo no App.css referencia estas variáveis — trocar o tema é trocar este bloco.
+   Contraste pensado pro galpão: tela clara demais lava no sol, escura demais some.
+   Verde forte = fundo de botão (texto branco por cima); verde vivo = texto de
+   destaque sobre fundo escuro. São papéis diferentes, por isso são cores diferentes. */
 :root {
+  /* Fundos */
+  --fundo: #0b1220;
+  --superficie: #16202f;
+  --superficie-2: #253247;
+  --borda: #3a4a63;
+
+  /* Texto */
+  --texto: #f1f5f9;
+  --texto-suave: #cbd5e1;
+  --texto-fraco: #94a3b8;
+  --texto-em-cor: #ffffff;
+
+  /* Verde */
+  --verde: #15803d;
+  --verde-escuro: #166534;
+  --verde-vivo: #4ade80;
+  --verde-vivo-2: #86efac;
+  --verde-fraco: #14532d;
+  --verde-fraco-2: #166534;
+  --verde-texto: #bbf7d0;
+
+  /* Vermelho */
+  --vermelho: #ef4444;
+  --vermelho-fraco: #4c1d1d;
+  --vermelho-texto: #fca5a5;
+
+  /* Sombras */
+  --sombra: rgba(0, 0, 0, 0.45);
+  --sombra-forte: rgba(0, 0, 0, 0.6);
+
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light;
-  color: #111827;
-  background-color: #e5e7eb;
+  /* Faz o navegador desenhar teclado, dropdown de select e scrollbar no escuro. */
+  color-scheme: dark;
+  color: var(--texto);
+  background-color: var(--fundo);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -21,7 +57,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #e5e7eb;
+  background-color: var(--fundo);
 }
 
 button {
@@ -33,4 +69,30 @@ input,
 select,
 textarea {
   font-family: inherit;
+}
+
+::placeholder {
+  color: var(--texto-fraco);
+  opacity: 1;
+}
+
+/* Nada de zoom por duplo-toque nem ao focar um campo: no tablet do galpão isso
+   desalinha a tela no meio da digitação. Todo campo também fica >= 16px, que é o
+   outro gatilho de zoom automático em navegador móvel. */
+html {
+  touch-action: manipulation;
+}
+
+input,
+select,
+textarea,
+button {
+  touch-action: manipulation;
+}
+
+/* Piso de 16px em campo sem classe — abaixo disso o navegador móvel dá zoom sozinho. */
+input,
+select,
+textarea {
+  font-size: 1rem;
 }

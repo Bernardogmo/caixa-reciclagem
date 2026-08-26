@@ -19,6 +19,7 @@ export default function TelaDono({
   onAbrirResumo,
   onAbrirDiasFechados,
   onAbrirMateriais,
+  onAbrirBackup,
 }) {
   const [view, setView] = useState("grid"); // 'grid' | 'compra' | 'venda' | 'outras'
   const lista = materiais.materiais;
@@ -88,6 +89,9 @@ export default function TelaDono({
       </button>
       <button className="btn btn-ghost" onClick={onAbrirDiasFechados}>
         📂 Dias fechados · 🔁 Reabrir
+      </button>
+      <button className="btn btn-ghost" onClick={onAbrirBackup}>
+        💾 Backup · Restaurar
       </button>
 
       <h2 className="tela-titulo">Histórico do dia</h2>

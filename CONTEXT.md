@@ -9,8 +9,8 @@ Glossário do domínio do controle de caixa da reciclagem. Somente linguagem do 
 
 ## Pessoas e papéis
 
-- **Dono**: gerencia o negócio. Faz o **caixa inicial**, o **fechamento do dia**, administra a **tabela de materiais**, lança **outras movimentações** e corrige registros errados.
-- **Funcionário(a)**: registra **compras** e **vendas**, vê o **histórico do dia** e o **saldo esperado**.
+- **Dono**: gerencia o negócio. Faz o **caixa inicial**, o **fechamento do dia**, administra a **tabela de materiais** e corrige registros errados.
+- **Funcionário(a)**: registra **compras**, **vendas** e **outras movimentações**, vê o **histórico do dia** e o **saldo esperado**.
 
 ## Movimentações
 
@@ -20,7 +20,7 @@ Glossário do domínio do controle de caixa da reciclagem. Somente linguagem do 
 
 ## Caixa e conferência
 
-- **Caixa inicial**: dinheiro em espécie deixado no início do dia.
+- **Caixa inicial**: dinheiro em espécie deixado no início do dia, contado por **quebra de caixa** — a mesma contagem por cédula e moeda do fechamento.
 - **Saldo esperado**: caixa inicial + entradas − saídas. Deriva das movimentações; é o valor que "deveria" estar na bolsa.
 - **Contagem física**: dinheiro efetivamente contado na bolsa no fechamento, registrado por **quebra de caixa** (quantidade por cédula/moeda). O total é calculado a partir da quebra.
 - **Cédulas e moedas**: as cédulas são de R$ 100, 50, 20, 10, 5 e 2; as moedas de R$ 1, 0,50, 0,25, 0,10 e 0,05. Mesma lista usada na **quebra de caixa**.

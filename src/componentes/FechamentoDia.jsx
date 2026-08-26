@@ -1,48 +1,17 @@
 // Fechamento do dia: quebra de caixa (qtd por cédula/moeda), CONTADO/ESPERADO/
-// DIFERENÇA ao vivo e FECHAR O DIA. Per esboço aprovado.
+// DIFERENÇA ao vivo e FECHAR O DIA. A grade é a mesma da abertura do dia.
 import { useState } from "react";
-import { CEDULAS, MOEDAS, calcularQuebraTotal, centavosParaReal, quebraVazia } from "../dia";
+import { calcularQuebraTotal, centavosParaReal, quantidadesVazias, quebraDeQuantidades } from "../dia";
+import QuebraDeCaixa from "./QuebraDeCaixa";
 
 export default function FechamentoDia({ dia, onFechar, onVoltar }) {
   // Qtds digitadas por denominação (chave = centavos); string pro input.
-  const [qtds, setQtds] = useState(() => {
-    const m = {};
-    for (const c of CEDULAS) m[c] = "";
-    for (const mo of MOEDAS) m[mo] = "";
-    return m;
-  });
+  const [qtds, setQtds] = useState(quantidadesVazias);
 
-  const num = (chave) => {
-    const n = Number(qtds[chave]);
-    return Number.isFinite(n) && n > 0 ? n : 0;
-  };
-
-  const quebra = {
-    cedulas: Object.fromEntries(CEDULAS.map((c) => [c, num(c)])),
-    moedas: Object.fromEntries(MOEDAS.map((m) => [m, num(m)])),
-  };
+  const quebra = quebraDeQuantidades(qtds);
   const contado = calcularQuebraTotal(quebra);
   const esperado = dia.saldoEsperadoCentavos;
   const dif = contado - esperado;
-
-  function grupo(titulo, lista) {
-    return (
-      <div className="grupo-quebra" key={titulo}>
-        <h3>{titulo}</h3>
-        {lista.map((denom) => (
-          <div className="quebra-linha" key={denom}>
-            <span>{centavosParaReal(denom)}</span>
-            <input
-              inputMode="numeric"
-              value={qtds[denom]}
-              onChange={(e) => setQtds((prev) => ({ ...prev, [denom]: e.target.value }))}
-              placeholder="0"
-            />
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   const difRotulo =
     dif === 0
@@ -63,8 +32,7 @@ export default function FechamentoDia({ dia, onFechar, onVoltar }) {
           <p className="saldo-valor">{centavosParaReal(esperado)}</p>
         </div>
 
-        {grupo("CÉDULAS", CEDULAS)}
-        {grupo("MOEDAS", MOEDAS)}
+        <QuebraDeCaixa qtds={qtds} onMudar={(denom, valor) => setQtds((prev) => ({ ...prev, [denom]: valor }))} />
 
         <div className="confere">
           <div className="confere-linha">

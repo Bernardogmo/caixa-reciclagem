@@ -126,3 +126,43 @@ export function pedirPersistencia() {
     navigator.storage.persist().catch(() => {});
   }
 }
+
+// ---- Backup / restauração (acesso bruto ao localStorage) ----
+// O formato e a validação ficam em backup.js; aqui só entra/sai do storage.
+
+export function lerTudoBruto() {
+  const dias = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const chave = localStorage.key(i);
+    if (chave && chave.indexOf(K_DIA) === 0) {
+      const dia = lerJSON(chave, null);
+      if (dia) dias[chave.slice(K_DIA.length)] = dia;
+    }
+  }
+  return {
+    meta: carregarMeta(),
+    indiceDias: carregarIndiceDias(),
+    tabelaMateriais: carregarTabelaMateriais(),
+    dias,
+  };
+}
+
+// Substitui TODO o conteúdo do app: apaga os dias atuais e grava os do backup.
+export function gravarTudoBruto({ meta, indiceDias, tabelaMateriais, dias }) {
+  const antigas = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const chave = localStorage.key(i);
+    if (chave && chave.indexOf(K_DIA) === 0) antigas.push(chave);
+  }
+  antigas.forEach((chave) => {
+    try {
+      localStorage.removeItem(chave);
+    } catch (e) {
+      console.warn("Falha ao remover", chave, e);
+    }
+  });
+  Object.keys(dias).forEach((data) => gravarJSON(K_DIA + data, dias[data]));
+  salvarIndiceDias(indiceDias);
+  if (tabelaMateriais) gravarJSON(K_TABELA, tabelaMateriais);
+  salvarMeta(meta);
+}

@@ -37,12 +37,13 @@ import FechamentoDia from "./componentes/FechamentoDia";
 import ResumoDia from "./componentes/ResumoDia";
 import DiasFechados from "./componentes/DiasFechados";
 import TabelaMateriais from "./componentes/TabelaMateriais";
+import Backup from "./componentes/Backup";
 
 export default function App() {
   const [perfil, setPerfil] = useState(null); // null | 'funcionario' | 'dono'
   const [dia, setDia] = useState(null); // dia aberto/reaberto, sempre recalculado
   const [materiais, setMateriais] = useState(() => carregarTabelaMateriais());
-  const [overlay, setOverlay] = useState(null); // 'fechamento'|'resumo'|'diasFechados'|'materiais'|null
+  const [overlay, setOverlay] = useState(null); // 'fechamento'|'resumo'|'diasFechados'|'materiais'|'backup'|null
   const [resumoDe, setResumoDe] = useState(null); // dia exibido no overlay 'resumo'
 
   // Boot: pede persistência estável e reabre o dia em aberto (se houver).
@@ -59,8 +60,8 @@ export default function App() {
     setDia(atualizado);
   }
 
-  function abrirDia(caixaInicialCentavos) {
-    const d = recalcular(novoDia(hojeISO(), caixaInicialCentavos, perfil));
+  function abrirDia(caixaInicialCentavos, quebraInicial) {
+    const d = recalcular(novoDia(hojeISO(), caixaInicialCentavos, perfil, quebraInicial));
     abrirDiaStorage(d);
     setDia(d);
   }
@@ -158,6 +159,7 @@ export default function App() {
         }}
         onAbrirDiasFechados={() => setOverlay("diasFechados")}
         onAbrirMateriais={() => setOverlay("materiais")}
+        onAbrirBackup={() => setOverlay("backup")}
       />
     ) : (
       <TelaFuncionario
@@ -166,6 +168,7 @@ export default function App() {
         podeExcluir={podeExcluir}
         onCompra={adicionarCompra}
         onVenda={adicionarVenda}
+        onOutra={adicionarOutra}
         onExcluir={excluirMovimentacao}
       />
     );
@@ -208,6 +211,7 @@ export default function App() {
       {overlay === "materiais" && (
         <TabelaMateriais tabela={materiais} onSalvar={salvarMateriais} onVoltar={() => setOverlay(null)} />
       )}
+      {overlay === "backup" && <Backup onVoltar={() => setOverlay(null)} />}
     </div>
   );
 }
