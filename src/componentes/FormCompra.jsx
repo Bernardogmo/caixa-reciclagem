@@ -1,28 +1,28 @@
-// Formulário de compra — uma tela só: nome (opcional) → material/peso/desconto
-// → monta a lista de materiais pesados → confirmar ou cancelar. Per regra nova.
-// O valor a pagar é calculado ao vivo (peso × preço/kg); o desconto é opcional.
+// Formulário de compra — uma tela só: nome (opcional) → material + peso →
+// monta a lista de materiais pesados → confirmar ou cancelar. Per regra nova.
+// O valor a pagar é calculado ao vivo (peso × preço/kg). Compra NÃO tem desconto.
 // Ao finalizar abre um modal de confirmação com o resumo da compra.
+// Em modo edição (dia de hoje) vem preenchido com a compra original.
+// A pessoa pode vir dos contatos cadastrados ou ser digitada na hora.
 import { useState } from "react";
-import { calcularCompra, centavosParaReal, formatarPeso, parsePeso, realParaCentavos } from "../dia";
+import { centavosParaReal, formatarPeso, parsePeso } from "../dia";
+import CampoPessoa from "./CampoPessoa";
 import ModalConfirmar from "./ModalConfirmar";
 
-export default function FormCompra({ materiais, onCompra }) {
-  const [nome, setNome] = useState("");
-  const [materialNome, setMaterialNome] = useState(materiais[0]?.nome || "");
+export default function FormCompra({ materiais, contatos = [], onCompra, inicial = null, modoEdicao = false }) {
+  const [nome, setNome] = useState(inicial?.pessoa || "");
+  const [materialNome, setMaterialNome] = useState(inicial?.itens?.[0]?.material || materiais[0]?.nome || "");
   const [peso, setPeso] = useState("");
-  const [desconto, setDesconto] = useState("");
-  const [pendentes, setPendentes] = useState([]);
+  const [pendentes, setPendentes] = useState(() => (inicial ? inicial.itens.map((i) => ({ ...i })) : []));
   const [confirmando, setConfirmando] = useState(false);
 
   const material = materiais.find((m) => m.nome === materialNome);
   const pesoKg = parsePeso(peso);
-  const descCentavos = realParaCentavos(desconto);
-  const descontoValido = Number.isFinite(descCentavos) ? descCentavos : 0;
   const itemValido = pesoKg > 0 && material != null;
   const totalLista = pendentes.reduce((s, p) => s + p.valorCentavos, 0);
 
-  // Valor bruto exibido ao vivo, sem desconto — o desconto abate depois.
-  const valorBrutoCentavos =
+  // Valor exibido ao vivo: peso × preço/kg.
+  const valorCentavos =
     material != null && pesoKg > 0 ? Math.round(pesoKg * material.precoPorKgCentavos) : null;
 
   function adicionarItem() {
@@ -33,13 +33,11 @@ export default function FormCompra({ materiais, onCompra }) {
         material: material.nome,
         pesoKg,
         precoPorKgCentavos: material.precoPorKgCentavos,
-        descontoCentavos: descontoValido,
-        valorCentavos: calcularCompra({ pesoKg, precoPorKgCentavos: material.precoPorKgCentavos, descontoCentavos: descontoValido }),
+        valorCentavos: Math.round(pesoKg * material.precoPorKgCentavos),
       },
     ]);
     // mantém o material selecionado — o mesmo catador costuma trazer vários
     setPeso("");
-    setDesconto("");
   }
 
   function pedirConfirmacao() {
@@ -50,27 +48,28 @@ export default function FormCompra({ materiais, onCompra }) {
   function finalizar() {
     setConfirmando(false);
     onCompra({ pessoa: nome, itens: pendentes });
-    // limpa tudo para a próxima pessoa
+    // limpa tudo para a próxima pessoa (na edição o formulário é fechado)
     setNome("");
     setPeso("");
-    setDesconto("");
     setPendentes([]);
   }
 
   return (
     <div>
-      <p className="dica">Registrar uma compra: digite quem trouxe (opcional), o material e o peso. O valor é calculado sozinho.</p>
+      <p className="dica">
+        {modoEdicao
+          ? "Editar a compra: ajuste o nome, os materiais e os pesos. O valor é recalculado sozinho."
+          : "Registrar uma compra: digite quem trouxe (opcional), o material e o peso. O valor é calculado sozinho."}
+      </p>
 
-      <div className="campo">
-        <label htmlFor="cp-nome">Nome da pessoa (opcional)</label>
-        <input
-          id="cp-nome"
-          className="input-grande"
-          placeholder="Ex.: João"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        />
-      </div>
+      <CampoPessoa
+        id="cp-nome"
+        label="Nome da pessoa (opcional)"
+        placeholder="Ex.: João"
+        contatos={contatos}
+        inicial={inicial?.pessoa || ""}
+        onMudar={setNome}
+      />
 
       <div className="campo">
         <label htmlFor="cp-mat">Material</label>
@@ -103,29 +102,13 @@ export default function FormCompra({ materiais, onCompra }) {
 
       <div className="valor-calculado">
         <div className="valor-calculado-rotulo">VALOR A PAGAR</div>
-        <strong>{valorBrutoCentavos != null ? centavosParaReal(valorBrutoCentavos) : "—"}</strong>
-        {valorBrutoCentavos != null && (
+        <strong>{valorCentavos != null ? centavosParaReal(valorCentavos) : "—"}</strong>
+        {valorCentavos != null && (
           <div className="valor-calculado-sub">
             = {formatarPeso(pesoKg)} kg × {centavosParaReal(material.precoPorKgCentavos)}/kg
           </div>
         )}
       </div>
-
-      {/* Campo de desconto oculto por enquanto — analisar a função depois.
-          A lógica continua ativa (adicionarItem aplica descontoCentavos); com o campo
-          escondido o valor fica sempre 0. Para voltar a exibir, é só descomentar. */}
-      {/* <div className="campo">
-        <label htmlFor="cp-desc">Desconto (opcional)</label>
-        <input
-          id="cp-desc"
-          className="input-grande"
-          inputMode="decimal"
-          placeholder="0,00"
-          value={desconto}
-          onChange={(e) => setDesconto(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && adicionarItem()}
-        />
-      </div> */}
 
       <button className="btn btn-secondary" disabled={!itemValido} onClick={adicionarItem}>
         + ADICIONAR À LISTA
@@ -138,7 +121,6 @@ export default function FormCompra({ materiais, onCompra }) {
           <div className="item-compra-valor">{centavosParaReal(p.valorCentavos)}</div>
           <div className="item-compra-sub">
             {formatarPeso(p.pesoKg)} kg × {centavosParaReal(p.precoPorKgCentavos)}/kg
-            {p.descontoCentavos ? ` (desconto ${centavosParaReal(p.descontoCentavos)})` : ""}
           </div>
           <button
             className="item-compra-remover"
@@ -155,13 +137,13 @@ export default function FormCompra({ materiais, onCompra }) {
       </div>
 
       <button className="btn btn-primary" disabled={pendentes.length === 0} onClick={pedirConfirmacao}>
-        ✔ CONFIRMAR COMPRA
+        {modoEdicao ? "✔ SALVAR COMPRA" : "✔ CONFIRMAR COMPRA"}
       </button>
 
       {confirmando && (
         <ModalConfirmar
-          titulo="Confirmar compra"
-          rotuloBotao="✔ CONFIRMAR COMPRA"
+          titulo={modoEdicao ? "Salvar compra" : "Confirmar compra"}
+          rotuloBotao={modoEdicao ? "✔ SALVAR COMPRA" : "✔ CONFIRMAR COMPRA"}
           onConfirmar={finalizar}
           onCancelar={() => setConfirmando(false)}
         >
@@ -175,7 +157,6 @@ export default function FormCompra({ materiais, onCompra }) {
               <div className="modal-resumo-linha" key={idx}>
                 <div className="modal-resumo-desc">
                   {p.material} — {formatarPeso(p.pesoKg)} kg × {centavosParaReal(p.precoPorKgCentavos)}/kg
-                  {p.descontoCentavos ? ` (desconto ${centavosParaReal(p.descontoCentavos)})` : ""}
                 </div>
                 <div className="modal-resumo-valor">{centavosParaReal(p.valorCentavos)}</div>
               </div>

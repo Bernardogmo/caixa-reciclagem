@@ -1,18 +1,36 @@
 // Formulário de venda: 1+ itens (material/descrição + quantidade + valor)
 // + ajuste no total. Total ao vivo via calcularVenda. Per esboço aprovado.
 // Ao finalizar abre um modal de confirmação com o resumo da venda.
+// Em modo edição (dia de hoje) vem preenchido com a venda original.
+// O comprador pode vir dos contatos cadastrados ou ser digitado na hora.
 import { useState } from "react";
 import { calcularVenda, centavosParaReal, realParaCentavos } from "../dia";
+import CampoPessoa from "./CampoPessoa";
 import ModalConfirmar from "./ModalConfirmar";
 
 function itemVazio() {
   return { material: "", quantidade: "", valor: "" };
 }
 
-export default function FormVenda({ materiais, onVenda }) {
-  const [itens, setItens] = useState([itemVazio()]);
-  const [pessoa, setPessoa] = useState("");
-  const [ajuste, setAjuste] = useState("");
+// 1250 → "12,50" (campo de texto em reais, o oposto do realParaCentavos)
+function centavosParaCampo(c) {
+  return (c / 100).toFixed(2).replace(".", ",");
+}
+
+export default function FormVenda({ materiais, contatos = [], onVenda, inicial = null, modoEdicao = false }) {
+  const [itens, setItens] = useState(() =>
+    inicial
+      ? inicial.itens.map((i) => ({
+          material: i.material,
+          quantidade: i.quantidade || "",
+          valor: centavosParaCampo(i.valorCentavos),
+        }))
+      : [itemVazio()],
+  );
+  const [pessoa, setPessoa] = useState(inicial?.pessoa || "");
+  const [ajuste, setAjuste] = useState(
+    inicial?.ajusteTotalCentavos ? centavosParaCampo(inicial.ajusteTotalCentavos) : "",
+  );
   const [confirmando, setConfirmando] = useState(false);
   const [dadosConfirmar, setDadosConfirmar] = useState(null);
 
@@ -61,18 +79,20 @@ export default function FormVenda({ materiais, onVenda }) {
 
   return (
     <div>
-      <p className="dica">Registre a venda: o material, a quantidade (opcional) e o valor recebido. Para mais de um item, toque em &apos;Adicionar item&apos;.</p>
+      <p className="dica">
+        {modoEdicao
+          ? "Editar a venda: ajuste o comprador, os itens e o valor recebido."
+          : "Registre a venda: o material, a quantidade (opcional) e o valor recebido. Para mais de um item, toque em 'Adicionar item'."}
+      </p>
 
-      <div className="campo">
-        <label htmlFor="ven-nome">Nome do comprador (opcional)</label>
-        <input
-          id="ven-nome"
-          className="input-grande"
-          placeholder="Ex.: Recicle Bem"
-          value={pessoa}
-          onChange={(e) => setPessoa(e.target.value)}
-        />
-      </div>
+      <CampoPessoa
+        id="ven-nome"
+        label="Nome do comprador (opcional)"
+        placeholder="Ex.: Recicle Bem"
+        contatos={contatos}
+        inicial={inicial?.pessoa || ""}
+        onMudar={setPessoa}
+      />
 
       {itens.map((item, idx) => (
         <div className="item-venda" key={idx}>
@@ -140,7 +160,7 @@ export default function FormVenda({ materiais, onVenda }) {
           id="ven-ajuste"
           className="input-grande"
           inputMode="decimal"
-          placeholder="0,00 (ou -2,00 de desconto)"
+          placeholder="0,00"
           value={ajuste}
           onChange={(e) => setAjuste(e.target.value)}
         />
@@ -152,13 +172,13 @@ export default function FormVenda({ materiais, onVenda }) {
       </div>
 
       <button className="btn btn-primary" disabled={!valido} onClick={pedirConfirmacao}>
-        ✔ CONFIRMAR VENDA
+        {modoEdicao ? "✔ SALVAR VENDA" : "✔ CONFIRMAR VENDA"}
       </button>
 
       {confirmando && dadosConfirmar && (
         <ModalConfirmar
-          titulo="Confirmar venda"
-          rotuloBotao="✔ CONFIRMAR VENDA"
+          titulo={modoEdicao ? "Salvar venda" : "Confirmar venda"}
+          rotuloBotao={modoEdicao ? "✔ SALVAR VENDA" : "✔ CONFIRMAR VENDA"}
           onConfirmar={finalizar}
           onCancelar={() => {
             setConfirmando(false);

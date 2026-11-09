@@ -1,5 +1,5 @@
 // Tela do dono: grid 2×2 (COMPRAS/VENDAS/OUTRAS/MATERIAIS), ações do dia
-// (fechar/dias fechados/reabrir/resumo) e o histórico do dia com exclusão.
+// (fechar/dias fechados/resumo) e o histórico do dia com edição e exclusão.
 // Per esboço aprovado. COMPRAS/VENDAS/OUTRAS trocam a view para o formulário.
 import { useState } from "react";
 import FormCompra from "./FormCompra";
@@ -10,16 +10,20 @@ import HistoricoDia from "./HistoricoDia";
 export default function TelaDono({
   dia,
   materiais,
-  podeExcluir,
+  contatos = [],
   onCompra,
   onVenda,
   onOutra,
+  onEditar,
   onExcluir,
   onAbrirFechamento,
   onAbrirResumo,
   onAbrirDiasFechados,
   onAbrirMateriais,
   onAbrirBackup,
+  onAbrirShopping,
+  onAbrirContatos,
+  onAbrirUsuarios,
 }) {
   const [view, setView] = useState("grid"); // 'grid' | 'compra' | 'venda' | 'outras'
   const lista = materiais.materiais;
@@ -45,7 +49,7 @@ export default function TelaDono({
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">COMPRA</button>
         </nav>
-        <FormCompra materiais={lista} onCompra={registrarCompra} />
+        <FormCompra materiais={lista} contatos={contatos} onCompra={registrarCompra} />
       </>
     );
   }
@@ -57,7 +61,7 @@ export default function TelaDono({
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">VENDA</button>
         </nav>
-        <FormVenda materiais={lista} onVenda={registrarVenda} />
+        <FormVenda materiais={lista} contatos={contatos} onVenda={registrarVenda} />
       </>
     );
   }
@@ -96,6 +100,19 @@ export default function TelaDono({
         </button>
       </div>
 
+      <button className="btn btn-secondary" onClick={onAbrirShopping}>
+        <span className="btn-grande-emoji">♻️</span>
+        COLETA DO SHOPPING
+      </button>
+      <button className="btn btn-secondary" onClick={onAbrirContatos}>
+        <span className="btn-grande-emoji">👥</span>
+        CONTATOS
+      </button>
+      <button className="btn btn-secondary" onClick={onAbrirUsuarios}>
+        <span className="btn-grande-emoji">👤</span>
+        USUÁRIOS
+      </button>
+
       <button className="btn btn-success" onClick={onAbrirFechamento}>
         ✔ FECHAR O DIA
       </button>
@@ -103,14 +120,14 @@ export default function TelaDono({
         📝 Resumo do dia
       </button>
       <button className="btn btn-ghost" onClick={onAbrirDiasFechados}>
-        📂 Dias fechados · 🔁 Reabrir
+        📂 Dias fechados
       </button>
       <button className="btn btn-ghost" onClick={onAbrirBackup}>
         💾 Backup · Restaurar
       </button>
 
       <h2 className="tela-titulo">Histórico do dia</h2>
-      <HistoricoDia dia={dia} podeExcluir={podeExcluir} onExcluir={onExcluir} />
+      <HistoricoDia dia={dia} onEditar={onEditar} onExcluir={onExcluir} />
     </>
   );
 }

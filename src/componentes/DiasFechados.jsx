@@ -1,8 +1,8 @@
 // Lista de dias fechados (data + diferença). O dia inteiro é o alvo de toque
-// pra abrir o resumo; "🔁 Reabrir" devolve o dia pro fluxo de correção.
+// pra abrir o resumo. Dia fechado não reabre: é registro definitivo.
 import { centavosParaReal, formatarData } from "../dia";
 
-export default function DiasFechados({ dias, onAbrir, onReabrir, onVoltar }) {
+export default function DiasFechados({ dias, onAbrir, onVoltar }) {
   function rotulo(d) {
     const dif = d.diferencaCentavos;
     if (dif == null) return "—";
@@ -19,7 +19,7 @@ export default function DiasFechados({ dias, onAbrir, onReabrir, onVoltar }) {
         <p className="overlay-titulo">Dias fechados</p>
       </div>
       <div className="overlay-corpo">
-        <p className="dica">Toque em um dia para ver o resumo. &apos;Reabrir&apos; deixa corrigir algo naquele dia.</p>
+        <p className="dica">Toque em um dia para ver o resumo.</p>
         {dias.length === 0 && <p className="vazio">Nenhum dia fechado ainda.</p>}
         {dias.map((d) => (
           <div className="dia-fechado" key={d.data}>
@@ -32,9 +32,6 @@ export default function DiasFechados({ dias, onAbrir, onReabrir, onVoltar }) {
               >
                 {rotulo(d)}
               </span>
-            </button>
-            <button className="dia-fechado-reabrir" onClick={() => onReabrir(d.data)}>
-              🔁 Reabrir
             </button>
           </div>
         ))}

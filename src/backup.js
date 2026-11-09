@@ -1,14 +1,15 @@
 // ===== Backup / restauração =====
-// Existe porque o localStorage do tablet é a ÚNICA cópia dos dados: limpar os
-// dados do navegador, trocar de navegador ou perder o tablet apaga o caixa.
-// Exporta tudo (dias + índice + tabela de materiais + meta) num JSON só.
-import { gravarTudoBruto, lerTudoBruto } from "./storage";
+// Foto de segurança do caixa compartilhado (Firestore): dias + índice + tabela
+// de materiais + meta + coleta do shopping + contatos num JSON só. O caixa fica
+// no banco, mas um arquivo em mãos protege contra erro de operação e permite
+// levar tudo para outro projeto. Backup antigo (do tempo do tablet) restaura.
+import { gravarTudoBruto, lerTudoBruto } from "./repositorio";
 
 export const VERSAO_BACKUP = 1;
 const ASSINATURA = "caixa-reciclagem";
 
-export function montarBackup() {
-  const bruto = lerTudoBruto();
+export async function montarBackup() {
+  const bruto = await lerTudoBruto();
   return {
     app: ASSINATURA,
     versaoBackup: VERSAO_BACKUP,
@@ -17,6 +18,9 @@ export function montarBackup() {
     indiceDias: bruto.indiceDias,
     tabelaMateriais: bruto.tabelaMateriais,
     dias: bruto.dias,
+    tabelaShopping: bruto.tabelaShopping,
+    mesesColeta: bruto.mesesColeta,
+    contatos: bruto.contatos,
   };
 }
 
@@ -34,12 +38,15 @@ export function nomeArquivo(backup) {
 export function resumirBackup(backup) {
   const datas = backup && backup.dias ? Object.keys(backup.dias).sort() : [];
   const tabela = backup ? backup.tabelaMateriais : null;
+  const meses = backup && backup.mesesColeta ? Object.keys(backup.mesesColeta).sort() : [];
   return {
     dias: datas.length,
     primeiro: datas.length ? datas[0] : null,
     ultimo: datas.length ? datas[datas.length - 1] : null,
     diaAberto: backup && backup.meta ? backup.meta.diaAberto : null,
     materiais: tabela && Array.isArray(tabela.materiais) ? tabela.materiais.length : 0,
+    mesesShopping: meses.length,
+    contatos: Array.isArray(backup && backup.contatos) ? backup.contatos.length : 0,
   };
 }
 
@@ -61,12 +68,18 @@ export function lerBackupDeTexto(texto) {
   return { ok: true, backup: obj };
 }
 
-export function restaurarBackup(backup) {
-  gravarTudoBruto({
+export async function restaurarBackup(backup) {
+  await gravarTudoBruto({
     meta: backup.meta || { version: 1, diaAberto: null },
     indiceDias: Array.isArray(backup.indiceDias) ? backup.indiceDias : [],
     tabelaMateriais: backup.tabelaMateriais || null,
     dias: backup.dias || {},
+    // Backup antigo (sem shopping): null = não mexe nos dados do shopping.
+    tabelaShopping: backup.tabelaShopping || null,
+    mesesColeta:
+      backup.mesesColeta && typeof backup.mesesColeta === "object" ? backup.mesesColeta : null,
+    // Backup antigo (sem contatos): null = não mexe na lista do caixa.
+    contatos: Array.isArray(backup.contatos) ? backup.contatos : null,
   });
 }
 

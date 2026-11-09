@@ -1,13 +1,22 @@
 // Tela do funcionário: botões grandes (COMPRAS/VENDAS/OUTRAS) como na tela do
-// gestor, e o histórico do dia logo abaixo. Sem MATERIAIS/FECHAR O DIA —
-// tabela de preços e fechamento continuam só com o gestor.
+// gestor, e o histórico do dia logo abaixo (com edição/exclusão do dia de hoje).
+// Sem MATERIAIS/FECHAR O DIA — tabela de preços e fechamento continuam só com o gestor.
 import { useState } from "react";
 import HistoricoDia from "./HistoricoDia";
 import FormCompra from "./FormCompra";
 import FormVenda from "./FormVenda";
 import FormOutras from "./FormOutras";
 
-export default function TelaFuncionario({ dia, materiais, podeExcluir, onCompra, onVenda, onOutra, onExcluir }) {
+export default function TelaFuncionario({
+  dia,
+  materiais,
+  contatos = [],
+  onCompra,
+  onVenda,
+  onOutra,
+  onEditar,
+  onExcluir,
+}) {
   const [view, setView] = useState("grid"); // 'grid' | 'compra' | 'venda' | 'outras'
   const lista = materiais.materiais;
 
@@ -32,7 +41,7 @@ export default function TelaFuncionario({ dia, materiais, podeExcluir, onCompra,
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">COMPRA</button>
         </nav>
-        <FormCompra materiais={lista} onCompra={registrarCompra} />
+        <FormCompra materiais={lista} contatos={contatos} onCompra={registrarCompra} />
       </>
     );
   }
@@ -44,7 +53,7 @@ export default function TelaFuncionario({ dia, materiais, podeExcluir, onCompra,
           <button onClick={() => setView("grid")}>← VOLTAR</button>
           <button className="ativa">VENDA</button>
         </nav>
-        <FormVenda materiais={lista} onVenda={registrarVenda} />
+        <FormVenda materiais={lista} contatos={contatos} onVenda={registrarVenda} />
       </>
     );
   }
@@ -80,7 +89,7 @@ export default function TelaFuncionario({ dia, materiais, podeExcluir, onCompra,
       </div>
 
       <h2 className="tela-titulo">Histórico de hoje</h2>
-      <HistoricoDia dia={dia} podeExcluir={podeExcluir} onExcluir={onExcluir} />
+      <HistoricoDia dia={dia} onEditar={onEditar} onExcluir={onExcluir} />
     </>
   );
 }

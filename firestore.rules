@@ -1,0 +1,78 @@
+rules_version = '2';
+
+// Regras do Firestore do Caixa da Reciclagem.
+//
+// Perfis:
+//  - temAcesso(): usuário logado E com documento em usuarios/{uid}. É o
+//    documento que o gestor cria/apaga para dar ou tirar acesso.
+//  - ehAdmin(): tem acesso e o papel é "admin" (gestor). O funcionário (papel
+//    "comum") não consegue fechar dia, mexer na quebra, em tabelas, contatos,
+//    shopping, backup nem criar contas.
+//
+// O funcionário pode:
+//  - abrir o dia (altera só diaAberto/fundoProximoDia em meta/geral);
+//  - lançar, editar e excluir movimentações (altera só "movimentacoes" no dia).
+// Um lançamento feito offline e sincronizado depois do fechamento ainda é
+// aceito, porque só toca no campo "movimentacoes".
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function temAcesso() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+
+    function ehAdmin() {
+      return temAcesso()
+        && get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.papel == 'admin';
+    }
+
+    // Só aceita alterações que mexam nos campos da lista.
+    function alteraSomente(campos) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(campos);
+    }
+
+    // Contas. Cada pessoa lê o próprio documento (para saber o papel ao
+    // entrar) e o gestor lê todos. Criar/alterar/apagar: só gestor.
+    match /usuarios/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || ehAdmin());
+      allow create, update, delete: if ehAdmin();
+    }
+
+    // Estado geral: qual dia está aberto, saldo remanescente e lista de dias
+    // fechados. O funcionário só pode mexer nas duas chaves do ciclo do dia.
+    match /meta/{docId} {
+      allow read: if temAcesso();
+      allow create, delete: if ehAdmin();
+      allow update: if ehAdmin()
+        || (temAcesso() && alteraSomente(['diaAberto', 'fundoProximoDia']));
+    }
+
+    // Dias. O funcionário cria o dia (abertura) e mexe só em movimentacoes;
+    // fechar o dia (status, quebra, caixa inicial) é só do gestor.
+    match /dias/{data} {
+      allow read: if temAcesso();
+      allow create: if temAcesso();
+      allow update: if ehAdmin() || (temAcesso() && alteraSomente(['movimentacoes']));
+      allow delete: if ehAdmin();
+    }
+
+    // Tabelas de materiais/preços, contatos e meses do shopping: todos leem,
+    // só o gestor escreve.
+    match /tabelas/{docId} {
+      allow read: if temAcesso();
+      allow write: if ehAdmin();
+    }
+
+    match /contatos/{docId} {
+      allow read: if temAcesso();
+      allow write: if ehAdmin();
+    }
+
+    match /coletas/{mes} {
+      allow read: if temAcesso();
+      allow write: if ehAdmin();
+    }
+  }
+}

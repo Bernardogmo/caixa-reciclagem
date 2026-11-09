@@ -1,7 +1,9 @@
-// Resumo do dia + "📋 Copiar texto" (clipboard com fallback execCommand).
+// Resumo do dia + "📋 Copiar texto" (clipboard com fallback execCommand) e os
+// PDFs (do dia e, quando fechado, o relatório de fechamento com as contagens).
 // Texto gerado por gerarTextoResumo — formato pronto pro WhatsApp.
 import { useState } from "react";
 import { centavosParaReal, gerarTextoResumo, pessoasDoDia, recalcular } from "../dia";
+import { gerarPdfDia, gerarPdfFechamento } from "../pdf";
 
 export default function ResumoDia({ dia, onVoltar }) {
   const texto = gerarTextoResumo(dia);
@@ -81,6 +83,20 @@ export default function ResumoDia({ dia, onVoltar }) {
         <button className="btn btn-primary" onClick={copiar}>
           {copiado ? "✔ Copiado!" : "📋 Copiar texto"}
         </button>
+
+        {/* PDFs gerados no aparelho (jsPDF) — funcionam sem internet. */}
+        <button className="btn btn-secondary" onClick={() => gerarPdfDia(r)}>
+          📄 PDF do dia
+        </button>
+        {fechado && (
+          <button className="btn btn-secondary" onClick={() => gerarPdfFechamento(r)}>
+            📄 Relatório de fechamento
+          </button>
+        )}
+        <p className="dica">
+          O PDF é salvo nos arquivos do aparelho.
+          {fechado ? " O relatório de fechamento inclui a contagem das cédulas e moedas." : ""}
+        </p>
       </div>
     </div>
   );

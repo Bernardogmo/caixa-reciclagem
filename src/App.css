@@ -167,6 +167,75 @@
   color: var(--texto);
 }
 
+/* ===== Campo de pessoa (CampoPessoa) ===== */
+/* Input normal; ao tocar, a lista de contatos abre por cima dos campos de baixo. */
+.pessoa-combo {
+  position: relative;
+}
+
+.pessoa-campo {
+  position: relative;
+}
+
+.pessoa-campo .input-grande {
+  padding-right: 44px;
+}
+
+.pessoa-campo-seta {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.25rem;
+  color: var(--texto-suave);
+  pointer-events: none;
+}
+
+.pessoa-opcoes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 30;
+  margin-top: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+  background-color: var(--superficie-2);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  box-shadow: var(--sombra-forte);
+}
+
+.pessoa-opcao {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 14px;
+  font-size: 1.125rem;
+  color: var(--texto);
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--borda);
+  text-align: left;
+  cursor: pointer;
+}
+
+.pessoa-opcao:last-child {
+  border-bottom: none;
+}
+
+.pessoa-opcao-nome {
+  font-weight: 600;
+}
+
+.pessoa-opcao-telefone {
+  font-size: 0.95rem;
+  color: var(--texto-fraco);
+}
+
 .select-grande {
   appearance: none;
 }
@@ -297,15 +366,29 @@
   color: var(--verde-vivo);
 }
 
-.mov-excluir {
+/* Editar/Excluir ocupam a linha inteira abaixo da movimentação. */
+.mov-acoes {
   grid-column: 1 / -1;
+  display: flex;
+  gap: 18px;
+  padding-top: 4px;
+}
+
+.mov-editar,
+.mov-excluir {
   background: none;
   border: none;
-  color: var(--vermelho);
   font-size: 1rem;
   font-weight: 600;
-  text-align: left;
-  padding: 4px 0 0;
+  padding: 4px 0;
+}
+
+.mov-editar {
+  color: var(--texto);
+}
+
+.mov-excluir {
+  color: var(--vermelho);
 }
 
 .vazio {
@@ -515,19 +598,6 @@
   color: var(--texto-fraco);
 }
 
-.dia-fechado-reabrir {
-  background: var(--superficie-2);
-  color: var(--texto);
-  border: 1px solid var(--borda);
-  border-radius: 10px;
-  min-height: 48px;
-  align-self: center;
-  margin-right: 10px;
-  padding: 0 14px;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
 /* ===== Texto de ajuda (dica) =====
    Linha curta em linguagem simples que explica o que a tela faz.
    Usada em todos os formulários e overlays pra quem usa o app no galpão. */
@@ -621,6 +691,11 @@
   gap: 8px;
   align-items: center;
   margin-bottom: 10px;
+}
+
+/* Contatos: segunda coluna é o telefone (opcional), um pouco mais larga. */
+.contato-linha {
+  grid-template-columns: 1fr 150px 44px;
 }
 
 .mat-linha input {
@@ -811,4 +886,267 @@
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0 0 8px;
+}
+
+/* ===== Coleta do shopping ===== */
+
+/* Navegação entre meses: ‹ Mês de 2026 › */
+.mes-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--superficie);
+  border-radius: 12px;
+  padding: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.mes-nav-btn {
+  min-width: 56px;
+  min-height: 56px;
+  font-size: 1.75rem;
+  font-weight: 700;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background-color: var(--superficie-2);
+  color: var(--texto);
+}
+
+.mes-nav-btn:disabled {
+  opacity: 0.35;
+}
+
+.mes-nav-titulo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.mes-status {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--verde-vivo-2);
+}
+
+.mes-status.fechado {
+  color: var(--texto-fraco);
+}
+
+/* Kg e valor do mês lado a lado. */
+.shopping-totais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.shopping-total-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--superficie);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.shopping-total-item span {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--texto-fraco);
+}
+
+.shopping-total-item strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.shopping-secao {
+  margin-top: 24px;
+}
+
+/* Linha de coleta: data · material · peso · excluir */
+.shopping-coleta {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 4px 12px;
+  align-items: center;
+  background-color: var(--superficie);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.shopping-coleta-data {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--texto-fraco);
+}
+
+.shopping-coleta-material {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.shopping-coleta-peso {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--verde-vivo-2);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.shopping-coleta-excluir {
+  grid-column: 1 / -1;
+  background: none;
+  border: none;
+  color: var(--vermelho);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  padding: 4px 0 0;
+}
+
+.shopping-fechar {
+  margin-top: 24px;
+}
+
+/* ===== Login, carregando e avisos ===== */
+.login-tela {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 480px;
+  padding-bottom: 48px;
+}
+
+.login-logo {
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-dica {
+  text-align: center;
+  margin: 0 0 16px;
+}
+
+.senha-campo {
+  position: relative;
+}
+
+.senha-campo .input-grande {
+  padding-right: 64px;
+}
+
+.senha-olho {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 56px;
+  min-height: 56px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+}
+
+.tela-carregando {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.aviso-erro,
+.aviso-ok {
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.aviso-erro {
+  background-color: var(--vermelho-fraco);
+  color: var(--vermelho-texto);
+}
+
+.aviso-ok {
+  background-color: var(--verde-fraco);
+  color: var(--verde-texto);
+}
+
+/* Aviso de offline: fica logo abaixo do header, sem empurrar a tela demais. */
+.faixa-offline,
+.faixa-erro {
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.faixa-offline {
+  background-color: var(--superficie-2);
+  color: var(--texto-suave);
+}
+
+.faixa-erro {
+  background-color: var(--vermelho-fraco);
+  color: var(--vermelho-texto);
+}
+
+/* ===== Usuários (área do gestor) ===== */
+.usuario-card {
+  background-color: var(--superficie);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px var(--sombra);
+}
+
+.usuario-nome {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+.usuario-eu {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--verde-vivo-2);
+}
+
+.usuario-info {
+  font-size: 1rem;
+  color: var(--texto-fraco);
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.usuario-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.usuario-acoes .btn {
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
+}
+
+.usuario-remover {
+  color: var(--vermelho);
 }

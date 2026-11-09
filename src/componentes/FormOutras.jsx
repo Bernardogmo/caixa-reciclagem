@@ -1,12 +1,18 @@
 // Outras movimentações (dono e funcionário): SAÍDA/ENTRADA + descrição livre + valor.
 // Per esboço aprovado: botões Sai / Entra, descrição e valor.
+// Em modo edição (dia de hoje) vem preenchido com a movimentação original.
 import { useState } from "react";
 import { centavosParaReal, realParaCentavos } from "../dia";
 
-export default function FormOutras({ onOutra }) {
-  const [direcao, setDirecao] = useState("saida");
-  const [descricao, setDescricao] = useState("");
-  const [valor, setValor] = useState("");
+// 1250 → "12,50" (campo de texto em reais, o oposto do realParaCentavos)
+function centavosParaCampo(c) {
+  return (c / 100).toFixed(2).replace(".", ",");
+}
+
+export default function FormOutras({ onOutra, inicial = null, modoEdicao = false }) {
+  const [direcao, setDirecao] = useState(inicial?.direcao || "saida");
+  const [descricao, setDescricao] = useState(inicial?.descricao || "");
+  const [valor, setValor] = useState(inicial ? centavosParaCampo(inicial.valorCentavos) : "");
 
   const valorCentavos = realParaCentavos(valor);
   const valido = descricao.trim() !== "" && Number.isFinite(valorCentavos) && valorCentavos > 0;
@@ -20,7 +26,11 @@ export default function FormOutras({ onOutra }) {
 
   return (
     <div>
-      <p className="dica">Use para dinheiro que sai ou entra por outro motivo (frete, pagamento, insumos). Escolha &apos;Saída&apos; ou &apos;Entrada&apos; e escreva o motivo.</p>
+      <p className="dica">
+        {modoEdicao
+          ? "Editar a movimentação: ajuste a direção, o motivo e o valor."
+          : "Use para dinheiro que sai ou entra por outro motivo (frete, pagamento, insumos). Escolha 'Saída' ou 'Entrada' e escreva o motivo."}
+      </p>
 
       <div className="abas">
         <button className={direcao === "saida" ? "ativa" : ""} onClick={() => setDirecao("saida")}>
@@ -64,7 +74,7 @@ export default function FormOutras({ onOutra }) {
       </div>
 
       <button className="btn btn-primary" disabled={!valido} onClick={confirmar}>
-        CONFIRMAR {direcao === "saida" ? "SAÍDA" : "ENTRADA"}
+        {modoEdicao ? "✔ SALVAR ALTERAÇÃO" : `CONFIRMAR ${direcao === "saida" ? "SAÍDA" : "ENTRADA"}`}
       </button>
     </div>
   );

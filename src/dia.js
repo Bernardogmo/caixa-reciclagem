@@ -41,6 +41,14 @@ export function rotuloPerfil(p) {
   return p === "dono" ? "Gestor(a)" : "Funcionário(a)";
 }
 
+// Quem lançou/fechou: dias novos guardam o NOME da pessoa; dias antigos
+// (localStorage) guardam "dono"/"funcionario". Nome desconhecido → "".
+export function nomeDeQuemFez(pessoa) {
+  if (!pessoa) return "";
+  if (pessoa === "dono" || pessoa === "funcionario") return rotuloPerfil(pessoa);
+  return String(pessoa);
+}
+
 // "5,0" | "5.0" → 5.0 (float apenas para exibição/leitura; dinheiro nunca deriva dele direto).
 export function parsePeso(str) {
   if (str == null) return NaN;
@@ -89,14 +97,16 @@ export function formatarHora(iso) {
 
 let contadorId = 0;
 
-// ID estável para key/exclusão: "c-20260814-0830-1"
+// ID estável para key/exclusão: "c-20260814-0830-1-k3f9qx"
+// O sufixo aleatório evita colisão entre aparelhos (os contadores são de cada um).
 export function gerarId(tipo, dataISO) {
   const agora = new Date();
   const compacto = dataISO.replace(/-/g, "");
   const hh = String(agora.getHours()).padStart(2, "0");
   const mm = String(agora.getMinutes()).padStart(2, "0");
   contadorId += 1;
-  return `${tipo}-${compacto}-${hh}${mm}-${contadorId}`;
+  const aleatorio = Math.random().toString(36).slice(2, 8);
+  return `${tipo}-${compacto}-${hh}${mm}-${contadorId}-${aleatorio}`;
 }
 
 export function novoDia(data, caixaInicialCentavos, perfil, quebraInicial) {
@@ -117,10 +127,10 @@ export function novoDia(data, caixaInicialCentavos, perfil, quebraInicial) {
   };
 }
 
-// peso × preço − desconto, nunca abaixo de zero. Math.round absorve float (0.1*30 = 3.0000000004).
-export function calcularCompra({ pesoKg, precoPorKgCentavos, descontoCentavos }) {
-  const bruto = Math.round(pesoKg * precoPorKgCentavos);
-  return Math.max(0, bruto - (descontoCentavos || 0));
+// peso × preço/kg, nunca abaixo de zero. Math.round absorve float (0.1*30 = 3.0000000004).
+// Compra não tem desconto (regra do plano) — o valor pago é sempre o peso × preço.
+export function calcularCompra({ pesoKg, precoPorKgCentavos }) {
+  return Math.max(0, Math.round(pesoKg * precoPorKgCentavos));
 }
 
 // "  João  " → "João"; vazio/undefined → null (anônimo)
@@ -129,16 +139,20 @@ function limparNome(nome) {
   return t === "" ? null : t;
 }
 
-// Compra multi-material de uma mesma pessoa (opcional): itens[] com peso/preço/desconto.
+// Compra multi-material de uma mesma pessoa (opcional): itens[] com peso/preço.
 // precoPorKgCentavos fotocopiado por item — editar a tabela depois não muda histórico.
-export function criarCompra({ pessoa, itens, registradoPor, data }) {
-  const itensComValor = itens.map((i) => ({
+// Compra não tem desconto (regra do plano).
+function itensCompraComValor(itens) {
+  return itens.map((i) => ({
     material: i.material,
     pesoKg: i.pesoKg,
     precoPorKgCentavos: i.precoPorKgCentavos,
-    descontoCentavos: i.descontoCentavos || 0,
-    valorCentavos: calcularCompra({ pesoKg: i.pesoKg, precoPorKgCentavos: i.precoPorKgCentavos, descontoCentavos: i.descontoCentavos }),
+    valorCentavos: calcularCompra({ pesoKg: i.pesoKg, precoPorKgCentavos: i.precoPorKgCentavos }),
   }));
+}
+
+export function criarCompra({ pessoa, itens, registradoPor, data }) {
+  const itensComValor = itensCompraComValor(itens);
   return {
     id: gerarId("c", data),
     tipo: "compra",
@@ -178,6 +192,49 @@ export function criarOutra({ direcao, descricao, valorCentavos, registradoPor, d
     direcao, // "entrada" | "saida"
     descricao,
     valorCentavos,
+  };
+}
+
+// Edição de movimentação do dia: troca só os campos editáveis, mantendo id e
+// timestamp originais e marcando quem alterou. Só é usada no dia aberto —
+// dia fechado é somente leitura.
+export function atualizarMovimentacao(m, dados, por) {
+  const alteradoEm = new Date().toISOString();
+  if (m.tipo === "compra") {
+    const itens = itensCompraComValor(dados.itens);
+    return {
+      ...m,
+      pessoa: limparNome(dados.pessoa),
+      itens,
+      totalCentavos: itens.reduce((s, i) => s + i.valorCentavos, 0),
+      alteradoEm,
+      alteradoPor: por,
+    };
+  }
+  if (m.tipo === "venda") {
+    const itens = dados.itens.map((i) => ({
+      material: i.material,
+      quantidade: i.quantidade || "",
+      valorCentavos: i.valorCentavos,
+    }));
+    const ajuste = dados.ajusteTotalCentavos || 0;
+    return {
+      ...m,
+      pessoa: limparNome(dados.pessoa),
+      itens,
+      ajusteTotalCentavos: ajuste,
+      totalCentavos: calcularVenda(itens, ajuste),
+      alteradoEm,
+      alteradoPor: por,
+    };
+  }
+  return {
+    ...m,
+    direcao: dados.direcao,
+    descricao: dados.descricao,
+    valorCentavos: dados.valorCentavos,
+    alteradoEm,
+    alteradoPor: por,
   };
 }
 
@@ -248,7 +305,6 @@ function normalizarMov(m) {
         material: m.material,
         pesoKg: m.pesoKg,
         precoPorKgCentavos: m.precoPorKgCentavos,
-        descontoCentavos: m.descontoCentavos || 0,
         valorCentavos: m.valorCentavos,
       },
     ],
@@ -277,13 +333,14 @@ export function quebraVazia() {
   return { cedulas: ceds, moedas: moedas, totalCentavos: 0 };
 }
 
-// "Papelão 100,0 kg × R$ 0,30 = R$ 30,00 (desconto R$ 2,00 → R$ 48,00)"
+// "Papelão 100,0 kg × R$ 0,30 = R$ 30,00"
 function descricaoItemCompra(i) {
-  const bruto = i.valorCentavos + i.descontoCentavos;
-  return `${i.material} ${formatarPeso(i.pesoKg)} kg × ${centavosParaReal(i.precoPorKgCentavos)} = ${centavosParaReal(bruto)}${i.descontoCentavos ? ` (desconto ${centavosParaReal(i.descontoCentavos)} → ${centavosParaReal(i.valorCentavos)})` : ""}`;
+  return `${i.material} ${formatarPeso(i.pesoKg)} kg × ${centavosParaReal(i.precoPorKgCentavos)} = ${centavosParaReal(i.valorCentavos)}`;
 }
 
-function descricaoMov(m) {
+// Texto de uma movimentação — usado no resumo por WhatsApp e na confirmação de
+// exclusão do histórico.
+export function descricaoMovimentacao(m) {
   if (m.tipo === "compra") {
     return m.itens.map(descricaoItemCompra).join(" | ");
   }
@@ -354,7 +411,7 @@ export function gerarTextoResumo(dia) {
   linhas.push(`*RESUMO DO DIA — ${formatarDataCurta(r.data)} (${nomeDiaSemana(r.data)})*`);
   const abriu = `Aberto às ${formatarHora(r.abertoEm)}`;
   const fechou = r.fechadoEm
-    ? ` | Fechado às ${formatarHora(r.fechadoEm)} por ${rotuloPerfil(r.fechadoPor)}`
+    ? ` | Fechado às ${formatarHora(r.fechadoEm)} por ${nomeDeQuemFez(r.fechadoPor) || rotuloPerfil(r.fechadoPor)}`
     : " | (em aberto)";
   linhas.push(`${abriu}${fechou}`);
   linhas.push("");
@@ -375,13 +432,13 @@ export function gerarTextoResumo(dia) {
     linhas.push(`*VENDAS* (${vendas.length}) — total ${centavosParaReal(soma(vendas, "totalCentavos"))}`);
     for (const g of agruparPorPessoa(vendas)) {
       linhas.push(`*${g.pessoa || "Sem nome"}*`);
-      for (const m of g.movs) linhas.push(`- ${descricaoMov(m)}`);
+      for (const m of g.movs) linhas.push(`- ${descricaoMovimentacao(m)}`);
     }
     linhas.push("");
   }
   if (outras.length) {
     linhas.push(`*OUTRAS* (${outras.length}) — total ${centavosParaRealComSinal(soma(outras, "outra"))}`);
-    outras.forEach((m) => linhas.push(`- ${formatarHora(m.timestamp)} ${descricaoMov(m)}`));
+    outras.forEach((m) => linhas.push(`- ${formatarHora(m.timestamp)} ${descricaoMovimentacao(m)}`));
     linhas.push("");
   }
 
@@ -428,4 +485,19 @@ export function quebraDeQuantidades(qtds) {
     cedulas: Object.fromEntries(CEDULAS.map((c) => [c, num(c)])),
     moedas: Object.fromEntries(MOEDAS.map((m) => [m, num(m)])),
   };
+}
+
+// {cedulas:{10000:2,...}, moedas:{100:0,...}} → {10000:"2", 100:"", ...}
+// Preenche a grade de contagem a partir de uma quebra já registrada (fechamento).
+export function quantidadesDeQuebra(quebra) {
+  const qtds = quantidadesVazias();
+  const preencher = (lista, origem) => {
+    for (const denom of lista) {
+      const qtd = origem?.[denom] || 0;
+      qtds[denom] = qtd ? String(qtd) : "";
+    }
+  };
+  preencher(CEDULAS, quebra?.cedulas);
+  preencher(MOEDAS, quebra?.moedas);
+  return qtds;
 }
